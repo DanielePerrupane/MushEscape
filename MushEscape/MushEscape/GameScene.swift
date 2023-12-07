@@ -11,10 +11,7 @@ import GameplayKit
 class GameScene: SKScene {
     
         private var character: SKSpriteNode?
-        private var moveLeftButton: SKSpriteNode!
-        private var moveRightButton: SKSpriteNode!
-        private var actionAButton: SKSpriteNode!
-        private var actionBButton: SKSpriteNode!
+        
     
     
     
