@@ -27,8 +27,12 @@ class GameScene: SKScene {
     
     var isTime: CGFloat = 3.0
     var onGround = true
-    var velocity: CGFloat = 0.0
+    var velocityY: CGFloat = 0.0
     var gravity: CGFloat = 0.6
+    var playerPosY: CGFloat = 0.0
+    
+    var numberOfJumps = 0
+    let maxJumps = 2
     
     var playableRect: CGRect {
         let ratio: CGFloat
@@ -60,6 +64,36 @@ class GameScene: SKScene {
         setupNodes()
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        //        if !isPaused {
+        //            if onGround {
+        //                onGround = false
+        //                velocityY = -25
+        //            }
+        //        }
+        if !isPaused {
+            if onGround || numberOfJumps < maxJumps {
+                if onGround {
+                    // Se il giocatore è a terra, consenti un salto
+                    numberOfJumps += 1
+                } else if numberOfJumps == 1 {
+                    // Se il giocatore è in aria e ha già effettuato il primo salto, consenti il doppio salto solo se è atterrato
+                    numberOfJumps += 1
+                }
+                velocityY = -25
+                onGround = false
+            }
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        if velocityY < -12.5 {
+            velocityY = -12.5
+        }
+    }
+    
     override func update(_ currentTime: TimeInterval) {
         if lastUpdateTime > 0 {
             dt = currentTime - lastUpdateTime
@@ -70,6 +104,24 @@ class GameScene: SKScene {
         lastUpdateTime = currentTime
         cameraMove()
         movePlayer()
+        
+        velocityY += gravity
+        player.position.y -= velocityY
+        
+        if player.position.y < playerPosY {
+            player.position.y = playerPosY
+            velocityY = 0.0
+            onGround = true
+            if onGround {
+                numberOfJumps = 0 // Resetta i salti disponibili quando il giocatore è atterrato
+            }
+        }
+        
+        //        if player.position.y < playerPosY {
+        //            player.position.y = playerPosY
+        //            velocityY = 0.0
+        //            onGround = true
+        //        }
     }
 }
 
@@ -117,6 +169,8 @@ extension GameScene {
         player.zPosition = 5.0
         player.scale(to: scale)
         player.position = CGPoint(x: 140, y: ground.frame.height + player.frame.height - 45)
+        
+        playerPosY = player.position.y
         addChild(player)
     }
     

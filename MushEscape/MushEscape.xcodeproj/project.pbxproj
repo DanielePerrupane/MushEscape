@@ -78,6 +78,8 @@
 				E7223EEF2B1F4004005BB0A9 /* AppDelegate.swift */,
 				E7223EF12B1F4004005BB0A9 /* GameScene.sks */,
 				E7223EF32B1F4004005BB0A9 /* Actions.sks */,
+				ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */,
+				ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */,
 				E7223EF52B1F4004005BB0A9 /* GameScene.swift */,
 				E7223EF72B1F4004005BB0A9 /* GameViewController.swift */,
 				64421DFB2B2312F60091906C /* MainMenu.swift */,
@@ -85,8 +87,6 @@
 				E7223EFC2B1F4004005BB0A9 /* Assets.xcassets */,
 				64421E012B232C6E0091906C /* Fonts */,
 				E7223EFE2B1F4004005BB0A9 /* LaunchScreen.storyboard */,
-				ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */,
-				ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */,
 			);
 			path = MushEscape;
 			sourceTree = "<group>";
@@ -330,7 +330,7 @@
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -359,7 +359,7 @@
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
