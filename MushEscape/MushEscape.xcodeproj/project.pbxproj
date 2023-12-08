@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		64421DFC2B2312F60091906C /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64421DFB2B2312F60091906C /* MainMenu.swift */; };
+		64421E002B232C5F0091906C /* mushescape.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64421DFF2B232C5F0091906C /* mushescape.ttf */; };
 		E7223EF02B1F4004005BB0A9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7223EEF2B1F4004005BB0A9 /* AppDelegate.swift */; };
 		E7223EF22B1F4004005BB0A9 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = E7223EF12B1F4004005BB0A9 /* GameScene.sks */; };
 		E7223EF42B1F4004005BB0A9 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = E7223EF32B1F4004005BB0A9 /* Actions.sks */; };
@@ -20,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		64421DFB2B2312F60091906C /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
+		64421DFF2B232C5F0091906C /* mushescape.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mushescape.ttf; sourceTree = "<group>"; };
 		E7223EEC2B1F4004005BB0A9 /* MushEscape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MushEscape.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7223EEF2B1F4004005BB0A9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E7223EF12B1F4004005BB0A9 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -44,6 +48,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		64421E012B232C6E0091906C /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				64421DFF2B232C5F0091906C /* mushescape.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		E7223EE32B1F4004005BB0A9 = {
 			isa = PBXGroup;
 			children = (
@@ -68,8 +80,10 @@
 				E7223EF32B1F4004005BB0A9 /* Actions.sks */,
 				E7223EF52B1F4004005BB0A9 /* GameScene.swift */,
 				E7223EF72B1F4004005BB0A9 /* GameViewController.swift */,
+				64421DFB2B2312F60091906C /* MainMenu.swift */,
 				E7223EF92B1F4004005BB0A9 /* Main.storyboard */,
 				E7223EFC2B1F4004005BB0A9 /* Assets.xcassets */,
+				64421E012B232C6E0091906C /* Fonts */,
 				E7223EFE2B1F4004005BB0A9 /* LaunchScreen.storyboard */,
 				ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */,
 				ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */,
@@ -135,6 +149,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64421E002B232C5F0091906C /* mushescape.ttf in Resources */,
 				E7223EFB2B1F4004005BB0A9 /* Main.storyboard in Resources */,
 				E7223EF22B1F4004005BB0A9 /* GameScene.sks in Resources */,
 				E7223EFD2B1F4004005BB0A9 /* Assets.xcassets in Resources */,
@@ -151,6 +166,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7223EF62B1F4004005BB0A9 /* GameScene.swift in Sources */,
+				64421DFC2B2312F60091906C /* MainMenu.swift in Sources */,
 				ED2A91E22B22102900F5FFC5 /* CGPoint+Ext.swift in Sources */,
 				ED2A91E02B220FEF00F5FFC5 /* Textures.swift in Sources */,
 				E7223EF82B1F4004005BB0A9 /* GameViewController.swift in Sources */,
