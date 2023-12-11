@@ -18,6 +18,9 @@ class GameScene: SKScene {
     var obstacles: [SKSpriteNode] = []
     
     var mushroomRun = SKTexture(imageNamed: "walk1")
+    var SurikenAn = SKTexture(imageNamed: "Suriken-1")
+    var SpikeAn = SKTexture(imageNamed: "Spike-B_1")
+    
     let textures = Textures()
     
     var cameraMovePointPerSecond: CGFloat = 450.0
@@ -25,7 +28,7 @@ class GameScene: SKScene {
     var dt: TimeInterval = 0.0
     var scale: CGSize = (CGSize(width: 200, height: 200))
     
-    var isTime: CGFloat = 3.0
+    var isTime: CGFloat = 2.0
     var onGround = true
     var velocityY: CGFloat = 0.0
     var gravity: CGFloat = 0.6
@@ -66,12 +69,6 @@ class GameScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        //        if !isPaused {
-        //            if onGround {
-        //                onGround = false
-        //                velocityY = -25
-        //            }
-        //        }
         if !isPaused {
             if onGround || numberOfJumps < maxJumps {
                 if onGround {
@@ -116,12 +113,6 @@ class GameScene: SKScene {
                 numberOfJumps = 0 // Resetta i salti disponibili quando il giocatore è atterrato
             }
         }
-        
-        //        if player.position.y < playerPosY {
-        //            player.position.y = playerPosY
-        //            velocityY = 0.0
-        //            onGround = true
-        //        }
     }
 }
 
@@ -133,7 +124,11 @@ extension GameScene {
         createBG()
         createGround()
         createPlayer()
+        setupSpike()
+        setupSuriken()
+        spawnObstacles()
         setupCamera()
+        
         
     }
     
@@ -207,4 +202,70 @@ extension GameScene {
         let amountToMove = cameraMovePointPerSecond * CGFloat(dt)
         player.position.x += amountToMove
     }
+    
+    func setupSuriken() {
+        let suriken = SKSpriteNode(texture: SurikenAn)
+        let surikenAn = SKAction.animate(with: textures.Suriken, timePerFrame: 0.09)
+        let AnSuriken = SKAction.repeatForever(surikenAn)
+        suriken.run(AnSuriken)
+        suriken.scale(to: scale)
+        suriken.name = "Suriken"
+        obstacles.append(suriken)
+        
+        let index = Int(arc4random_uniform(UInt32(obstacles.count-1)))
+        let surikenR = obstacles[index].copy() as! SKSpriteNode
+        surikenR.zPosition = 5.0
+        surikenR.position = CGPoint(x: cameraRect.maxX + surikenR.frame.width/2, y: ground.frame.height + player.frame.height - 45)
+        addChild(surikenR)
+        surikenR.run(.sequence([
+            .wait(forDuration: 10),
+            .removeFromParent()
+        ]))
+    }
+    
+    func setupSpike() {
+        
+        let spike = SKSpriteNode(texture: SpikeAn)
+        let spikeAn = SKAction.animate(with: textures.Spike, timePerFrame: 0.09)
+        let AnSpike = SKAction.repeatForever(spikeAn)
+        spike.run(AnSpike)
+        spike.scale(to: scale)
+        spike.name = "Spike"
+        obstacles.append(spike)
+        
+        let index = Int(arc4random_uniform(UInt32(obstacles.count-1)))
+        let spikeR = obstacles[index].copy() as! SKSpriteNode
+        spikeR.zPosition = 5.0
+        spikeR.position = CGPoint(x: cameraRect.maxX + spikeR.frame.width/2, y: ground.frame.height + spikeR.frame.height - 45)
+        addChild(spikeR)
+        spikeR.run(.sequence([
+            .wait(forDuration: 10),
+            .removeFromParent()
+        ]))
+    }
+    
+    
+    func spawnObstacles() {
+        let random = Double(CGFloat.random(min: 1.0, max: isTime))
+        run(.repeatForever(.sequence([
+            .wait(forDuration: random),
+            .run { [weak self] in
+                self?.setupSpike()
+                self?.setupSuriken()
+            }
+            
+        ])))
+        
+        run(.repeatForever(.sequence([
+            .wait(forDuration: 5),
+            .run {
+                self.isTime -= 0.01
+                
+                if self.isTime <= 1.5 {
+                    self.isTime = 1.5
+                }
+            }
+        ])))
+    }
+    
 }
