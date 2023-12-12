@@ -25,7 +25,8 @@ class GameScene: SKScene {
     var LongWoodAn = SKTexture(imageNamed: "long_wood_spike_01")
     var DogAn = SKTexture(imageNamed: "dog1")
     var BirdAn = SKTexture(imageNamed: "bird1")
-
+    var mushroomDead = SKTexture(imageNamed: "1_mushy")
+    
     
     let textures = Textures()
     
@@ -36,6 +37,12 @@ class GameScene: SKScene {
     var spikeS: CGSize = (CGSize(width: 80, height: 400))
     var dogS: CGSize = (CGSize(width: 300, height: 300))
     var BirdS: CGSize = (CGSize(width: 200, height: 200))
+    
+    //Properties TIMER
+    var elapsedTime: TimeInterval = 0
+    var timerLabel: SKLabelNode!
+    var timerLabel1: SKLabelNode!
+    var isTimerPaused = false
     
     var isTime: CGFloat = 2.0
     var isTimeD: CGFloat = 5.0
@@ -134,15 +141,21 @@ extension GameScene {
         createBG()
         createGround()
         createPlayer()
+        setupTimer()
         setupSpike()
         setupDog()
         setupBird()
         spawnObstacles()
         spawnBird()
         spawnDog()
+        setupPhysics()
         setupCamera()
         
         
+    }
+    
+    func setupPhysics() {
+        physicsWorld.contactDelegate = self
     }
     
     func createBG() {
@@ -177,6 +190,11 @@ extension GameScene {
         player.zPosition = 5.0
         player.scale(to: playerS)
         player.position = CGPoint(x: 190, y: ground.frame.height + player.frame.height - 35)
+        player.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 140, height: 115))
+        player.physicsBody!.affectedByGravity = false
+        player.physicsBody!.restitution = 0.0
+        player.physicsBody!.categoryBitMask = PhysicsCategory.Player
+        player.physicsBody!.contactTestBitMask = PhysicsCategory.Obstacles
         
         playerPosY = player.position.y
         addChild(player)
@@ -214,8 +232,12 @@ extension GameScene {
     func movePlayer() {
         let amountToMove = cameraMovePointPerSecond * CGFloat(dt)
         player.position.x += amountToMove
+        
+        timerLabel.position.x += amountToMove
+        timerLabel1.position.x += amountToMove
     }
     
+    //MARK: - Obstacles Function
     func setupBird() {
         bird = SKSpriteNode(texture: BirdAn)
         let BirdAn = SKAction.animate(with: textures.Bird, timePerFrame: 0.09)
@@ -237,6 +259,11 @@ extension GameScene {
         let destinationPoint = CGPoint(x: -1000,y: randomY)
         let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
         BirdR.run(moveAction)
+        BirdR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 150, height: 100))
+        BirdR.physicsBody!.affectedByGravity = false
+        BirdR.physicsBody!.isDynamic = false
+        BirdR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
+        BirdR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
         addChild(BirdR)
         BirdR.run(.sequence([
             .wait(forDuration: 5),
@@ -274,6 +301,11 @@ extension GameScene {
         let moveDuration = baseDuration + randomFactor
         let destinationPoint = CGPoint(x: -1000,y: ground.frame.height + DogR.frame.height - 50)
         let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
+        DogR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 200, height: 20))
+        DogR.physicsBody!.affectedByGravity = false
+        DogR.physicsBody!.isDynamic = false
+        DogR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
+        DogR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
         DogR.run(moveAction)
         addChild(DogR)
         DogR.run(.sequence([
@@ -281,7 +313,7 @@ extension GameScene {
             .removeFromParent()
         ]))
     }
-
+    
     func spawnDog() {
         let random = Double(CGFloat.random(min: 3.0, max: isTimeD))
         run(.repeatForever(.sequence([
@@ -297,9 +329,9 @@ extension GameScene {
     func setupSpike() {
         
         let spike = SKSpriteNode(imageNamed: "long_wood_spike_05")
-//        let spikeAn = SKAction.animate(with: textures.LongWood, timePerFrame: 0.2)
-//        let AnSpike = SKAction.repeatForever(spikeAn)
-//        spike.run(AnSpike)
+        //        let spikeAn = SKAction.animate(with: textures.LongWood, timePerFrame: 0.2)
+        //        let AnSpike = SKAction.repeatForever(spikeAn)
+        //        spike.run(AnSpike)
         spike.scale(to: spikeS)
         spike.name = "Spike"
         obstaclesSpike.append(spike)
@@ -308,6 +340,11 @@ extension GameScene {
         let spikeR = obstaclesSpike[index].copy() as! SKSpriteNode
         spikeR.zPosition = 5.0
         spikeR.position = CGPoint(x: cameraRect.maxX + CGFloat.random(in: 0...size.width), y: ground.frame.height + spikeR.frame.height - 300)
+        spikeR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 115))
+        spikeR.physicsBody!.affectedByGravity = false
+        spikeR.physicsBody!.isDynamic = false
+        spikeR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
+        spikeR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
         addChild(spikeR)
         spikeR.run(.sequence([
             .wait(forDuration: 10),
@@ -339,4 +376,92 @@ extension GameScene {
         
     }
     
+    //MARK: - Timer Function
+    
+    func startTimer() {
+        // Esegui un'azione che incrementa il tempo ogni secondo
+        let waitAction = SKAction.wait(forDuration: 1)
+        let updateAction = SKAction.run { [weak self] in
+            guard let self = self, !self.isTimerPaused else { return }
+            self.elapsedTime += 1
+            self.updateTimerLabel()
+        }
+        let sequenceAction = SKAction.sequence([waitAction, updateAction])
+        let repeatAction = SKAction.repeatForever(sequenceAction)
+        run(repeatAction, withKey: "timerAction")
+    }
+    
+    func updateTimerLabel() {
+        let minutes = Int(elapsedTime) / 60
+        let seconds = Int(elapsedTime) % 60
+        timerLabel.text = String(format: "%02d:%02d", minutes, seconds)
+        timerLabel1.text = String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    func createTimerLabel() {
+        timerLabel = SKLabelNode(fontNamed: "mushescape")
+        timerLabel.name = "TimerLabel"
+        timerLabel.fontName = "Papyrus"
+        timerLabel.text = "00:00"
+        timerLabel.zPosition = 5.0
+        timerLabel.fontSize = 100
+        timerLabel.position = CGPoint(x: 1000, y: 1100)
+        addChild(timerLabel)
+        
+        timerLabel1 = SKLabelNode(fontNamed: "mushescape")
+        timerLabel1.name = "TimerLabel"
+        timerLabel1.fontName = "Papyrus"
+        timerLabel1.text = "00:00"
+        timerLabel1.zPosition = 4.0
+        timerLabel1.fontSize = 105
+        timerLabel1.fontColor = .black
+        timerLabel1.position = CGPoint(x: 1010, y: 1095)
+        addChild(timerLabel1)
+        
+        
+    }
+    
+    
+    func setupTimer() {
+        createTimerLabel()
+        startTimer()
+    }
+    
+    //MARK: - Game Over Function
+    
+    func setupGameOver() {
+        player.removeAllActions()
+        
+        //        player = SKSpriteNode(texture: mushroomDead)
+        let RunAnimation = SKAction.animate(with: textures.mushroomDead, timePerFrame: 0.3)
+        player.run(RunAnimation)
+        
+        //        player.name = "Player"
+        //        player.zPosition = 10.0
+        //        player.scale(to: playerS)
+        //        player.position = CGPoint(x: 190, y: ground.frame.height + player.frame.height - 35)
+        //        addChild(player)
+    }
+    
+    
 }
+
+//MARK: -SKPhysicsContactDelegate
+
+extension GameScene: SKPhysicsContactDelegate {
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        let other = contact.bodyA.categoryBitMask == PhysicsCategory.Player ? contact.bodyB : contact.bodyA
+        
+        switch other.categoryBitMask {
+        case PhysicsCategory.Obstacles:
+            isTimerPaused = true
+            cameraMovePointPerSecond = 0
+            setupGameOver()
+            
+        default:
+            break
+        }
+    }
+}
+

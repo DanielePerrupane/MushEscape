@@ -19,6 +19,7 @@
 		E7223F002B1F4004005BB0A9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E7223EFE2B1F4004005BB0A9 /* LaunchScreen.storyboard */; };
 		E79F85022B271580003AC03A /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79F85012B271580003AC03A /* GameManager.swift */; };
 		ED12978F2B23A0DE003C8A2E /* CGFloat+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED12978E2B23A0DE003C8A2E /* CGFloat+Ext.swift */; };
+		ED15DD6E2B28A17F0039BFF1 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED15DD6D2B28A17F0039BFF1 /* Types.swift */; };
 		ED2A91E02B220FEF00F5FFC5 /* Textures.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */; };
 		ED2A91E22B22102900F5FFC5 /* CGPoint+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */; };
 /* End PBXBuildFile section */
@@ -37,6 +38,7 @@
 		E7223EFF2B1F4004005BB0A9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E79F85012B271580003AC03A /* GameManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
 		ED12978E2B23A0DE003C8A2E /* CGFloat+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Ext.swift"; sourceTree = "<group>"; };
+		ED15DD6D2B28A17F0039BFF1 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Textures.swift; sourceTree = "<group>"; };
 		ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -85,6 +87,7 @@
 				ED12978E2B23A0DE003C8A2E /* CGFloat+Ext.swift */,
 				ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */,
 				ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */,
+				ED15DD6D2B28A17F0039BFF1 /* Types.swift */,
 				E7223EF52B1F4004005BB0A9 /* GameScene.swift */,
 				E7223EF72B1F4004005BB0A9 /* GameViewController.swift */,
 				64421DFB2B2312F60091906C /* MainMenu.swift */,
@@ -177,6 +180,7 @@
 				ED2A91E22B22102900F5FFC5 /* CGPoint+Ext.swift in Sources */,
 				ED2A91E02B220FEF00F5FFC5 /* Textures.swift in Sources */,
 				E7223EF82B1F4004005BB0A9 /* GameViewController.swift in Sources */,
+				ED15DD6E2B28A17F0039BFF1 /* Types.swift in Sources */,
 				ED12978F2B23A0DE003C8A2E /* CGFloat+Ext.swift in Sources */,
 				E7223EF02B1F4004005BB0A9 /* AppDelegate.swift in Sources */,
 			);

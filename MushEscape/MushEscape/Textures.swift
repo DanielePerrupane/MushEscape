@@ -37,4 +37,10 @@ class Textures {
                                 SKTexture(imageNamed: "bird5"),
                                 SKTexture(imageNamed: "bird6"),
     ]
+    
+    let mushroomDead : [SKTexture] = [SKTexture(imageNamed: "1_mushy"),
+                                SKTexture(imageNamed: "2_mushy"),
+                                SKTexture(imageNamed: "3_mushy"),
+                                SKTexture(imageNamed: "4_mushy"),
+    ]
 }
