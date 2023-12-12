@@ -54,6 +54,13 @@ class GameScene: SKScene {
     var numberOfJumps = 0
     let maxJumps = 2
     
+//    var bgMusic = SKAction.playSoundFileNamed("backgroundmusic.mp3")
+
+    var soundJump = SKAction.playSoundFileNamed("jump.mp3")
+      
+    var pauseNode: SKSpriteNode!
+    var containerNode = SKNode()
+      
     var playableRect: CGRect {
         let ratio: CGFloat
         switch UIScreen.main.nativeBounds.height {
@@ -82,6 +89,8 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         setupNodes()
+        
+        SKTAudio.shared.playBGMusic("backgroundmusic.mp3")
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -97,6 +106,7 @@ class GameScene: SKScene {
                 }
                 velocityY = -25
                 onGround = false
+                run(soundJump)
             }
         }
     }
@@ -131,6 +141,9 @@ class GameScene: SKScene {
             }
         }
     }
+    func stopBackgroundMusic() {
+              SKTAudio.musicEnabled = false
+          }
 }
 
 //MARK: - Configuration
@@ -235,6 +248,38 @@ extension GameScene {
         
         timerLabel.position.x += amountToMove
         timerLabel1.position.x += amountToMove
+    }
+    
+    func setupPause() {
+        pauseNode = SKSpriteNode(imageNamed: "pausebutton")
+        pauseNode.setScale(0.5)
+        pauseNode.zPosition = 50.0
+        pauseNode.name = "pause"
+        pauseNode.position = CGPoint(x: playableRect.width/2.0 - pauseNode.frame.width/2.0 - 30.0, y: playableRect.height/2.0 - pauseNode.frame.height/2.0 - 10.0)
+        cameraNode.addChild(pauseNode)
+    }
+    
+    func createPanel() {
+        cameraNode.addChild(containerNode)
+        
+        let panel = SKSpriteNode(imageNamed: "panel")
+        panel.zPosition = 60.0
+        panel.position = .zero
+        containerNode.addChild(panel)
+        
+        let resume = SKSpriteNode(imageNamed: "resume")
+        resume.zPosition = 70.0
+        resume.name = "resume"
+        resume.setScale(0.7)
+        resume.position = CGPoint(x: -panel.frame.width/2.0 + resume.frame.width*1.5, y:0.0)
+        panel.addChild(resume)
+        
+        let quit = SKSpriteNode(imageNamed: "back")
+        quit.zPosition = 70.0
+        quit.name = "quit"
+        quit.setScale(0.7)
+        quit.position = CGPoint(x: panel.frame.width/2.0 - quit.frame.width*1.5, y: 0.0)
+        panel.addChild(quit)
     }
     
     //MARK: - Obstacles Function

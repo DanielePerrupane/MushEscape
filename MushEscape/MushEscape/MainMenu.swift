@@ -34,9 +34,19 @@ class MainMenu: SKScene {
         } else if node.name == "highscore" {
             setupPanel()
         } else if node.name == "setting" {
+            setupSetting()
         } else if node.name == "container" {
             containerNode.removeFromParent()
         
+        } else if node.name == "music" {
+            let node = node as! SKSpriteNode
+            SKTAudio.musicEnabled = !SKTAudio.musicEnabled
+            node.texture = SKTexture(imageNamed: SKTAudio.musicEnabled ? "musicOn" : "musicOff")
+            
+        } else if node.name == "effect" {
+            let node = node as! SKSpriteNode
+            effectEnabled = !effectEnabled
+            node.texture = SKTexture(imageNamed: effectEnabled ? "effectOn" : "effectOff")
         }
     }
     
@@ -135,5 +145,31 @@ extension MainMenu {
         addChild(containerNode)
     }
     
+    func setupSetting() {
+        setupContainer()
+        
+        //Panel
+        let panel = SKSpriteNode(imageNamed: "panel")
+        panel.setScale(1.5)
+        panel.zPosition = 20.0
+        panel.position = .zero
+        containerNode.addChild(panel)
+        
+        //Music
+        let music = SKSpriteNode(imageNamed: SKTAudio.musicEnabled ? "musicOn" : "musicOff")
+        music.name = "music"
+        music.setScale(0.7)
+        music.zPosition = 25.0
+        music.position = CGPoint(x: -music.frame.width - 50.0, y: 0.0)
+        panel.addChild(music)
+        
+        //Sound
+        let effect = SKSpriteNode(imageNamed: effectEnabled ? "effectOn" : "effectOff")
+        effect.name = "effect"
+        effect.setScale(0.7)
+        effect.zPosition = 25.0
+        effect.position = CGPoint(x: music.frame.width + 50.0, y: 0.0)
+        panel.addChild(effect)
+    }
 }
 
