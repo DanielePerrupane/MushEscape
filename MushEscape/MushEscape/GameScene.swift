@@ -13,6 +13,9 @@ class GameScene: SKScene {
     //MARK: - Properties
     
     
+    //Properties GAMEOVER
+    var gameOverPopup: GameOverPopUp!
+    
     //Properties TIMER
     var elapsedTime: TimeInterval = 0
     var timerLabel: SKLabelNode!
@@ -81,6 +84,9 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         setupNodes()
+        gameOverPopup = GameOverPopUp()
+        addChild(gameOverPopup)
+        
         
     }
     
@@ -142,6 +148,7 @@ extension GameScene {
         createGround()
         createPlayer()
         setupTimer()
+        
         setupSpike()
         setupDog()
         setupBird()
@@ -348,6 +355,10 @@ extension GameScene {
         ])))
         
     }
+    
+    //FUNZIONI SCHERMATA GAMEOVER
+    
+    
     
     //FUNZIONI TIMER
     func startTimer() {
