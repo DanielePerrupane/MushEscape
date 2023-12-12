@@ -12,6 +12,15 @@ class GameScene: SKScene {
     
     //MARK: - Properties
     
+    
+    //Properties GAMEOVER
+    var gameOverPopup: GameOverPopUp!
+    
+    //Properties TIMER
+    var elapsedTime: TimeInterval = 0
+    var timerLabel: SKLabelNode!
+    var isTimerPaused = false
+    
     var ground: SKSpriteNode!
     var player: SKSpriteNode!
     var cameraNode = SKCameraNode()
@@ -25,7 +34,11 @@ class GameScene: SKScene {
     var LongWoodAn = SKTexture(imageNamed: "long_wood_spike_01")
     var DogAn = SKTexture(imageNamed: "dog1")
     var BirdAn = SKTexture(imageNamed: "bird1")
+<<<<<<< HEAD
     var mushroomDead = SKTexture(imageNamed: "1_mushy")
+=======
+    
+>>>>>>> main
     
     let textures = Textures()
     
@@ -77,6 +90,10 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         setupNodes()
+        gameOverPopup = GameOverPopUp()
+        addChild(gameOverPopup)
+        
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -137,6 +154,8 @@ extension GameScene {
         createBG()
         createGround()
         createPlayer()
+        setupTimer()
+        
         setupSpike()
         setupDog()
         setupBird()
@@ -231,6 +250,8 @@ extension GameScene {
     func movePlayer() {
         let amountToMove = cameraMovePointPerSecond * CGFloat(dt)
         player.position.x += amountToMove
+        
+        timerLabel.position.x += amountToMove
     }
     
     func setupBird() {
@@ -308,7 +329,7 @@ extension GameScene {
             .removeFromParent()
         ]))
     }
-
+    
     func spawnDog() {
         let random = Double(CGFloat.random(min: 3.0, max: isTimeD))
         run(.repeatForever(.sequence([
@@ -324,9 +345,9 @@ extension GameScene {
     func setupSpike() {
         
         let spike = SKSpriteNode(imageNamed: "long_wood_spike_05")
-//        let spikeAn = SKAction.animate(with: textures.LongWood, timePerFrame: 0.2)
-//        let AnSpike = SKAction.repeatForever(spikeAn)
-//        spike.run(AnSpike)
+        //        let spikeAn = SKAction.animate(with: textures.LongWood, timePerFrame: 0.2)
+        //        let AnSpike = SKAction.repeatForever(spikeAn)
+        //        spike.run(AnSpike)
         spike.scale(to: spikeS)
         spike.name = "Spike"
         obstaclesSpike.append(spike)
@@ -382,6 +403,64 @@ extension GameScene {
             }
         ])))
         
+    }
+    
+    //FUNZIONI SCHERMATA GAMEOVER
+    
+    
+    
+    //FUNZIONI TIMER
+    func startTimer() {
+        // Esegui un'azione che incrementa il tempo ogni secondo
+        let waitAction = SKAction.wait(forDuration: 1)
+        let updateAction = SKAction.run { [weak self] in
+            guard let self = self, !self.isTimerPaused else { return }
+            self.elapsedTime += 1
+            self.updateTimerLabel()
+        }
+        let sequenceAction = SKAction.sequence([waitAction, updateAction])
+        let repeatAction = SKAction.repeatForever(sequenceAction)
+        run(repeatAction, withKey: "timerAction")
+    }
+    
+    //FUNZIONI DA IMPLEMENTARE SUCCESSIVAMENTE
+    
+//    func pauseTimer() {
+//        isTimerPaused = true
+//    }
+//    
+//    func resumeTimer() {
+//        isTimerPaused = false
+//    }
+//    
+//    func stopTimer() {
+//        removeAction(forKey: "timerAction")
+//        isTimerPaused = false
+//        // Ora puoi utilizzare la variabile `elapsedTime` come necessario
+//    }
+    
+    func updateTimerLabel() {
+        let minutes = Int(elapsedTime) / 60
+        let seconds = Int(elapsedTime) % 60
+        timerLabel.text = String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    func createTimerLabel() {
+        timerLabel = SKLabelNode(fontNamed: "mushescape")
+        timerLabel.name = "TimerLabel"
+        //FONT 
+        timerLabel.fontName = "Papyrus"
+        timerLabel.text = "00:00"
+        timerLabel.zPosition = 5.0
+        timerLabel.fontSize = 100
+        timerLabel.position = CGPoint(x: 1000, y: 1100)
+        addChild(timerLabel)
+    }
+    
+    
+    func setupTimer() {
+        createTimerLabel()
+        startTimer()
     }
     
 }
