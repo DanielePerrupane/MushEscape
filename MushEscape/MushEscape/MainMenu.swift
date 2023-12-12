@@ -53,7 +53,7 @@ extension MainMenu {
         let bgNode = SKSpriteNode(imageNamed: "bgmenu")
         bgNode.zPosition = -1.0
         bgNode.anchorPoint = .zero
-        bgNode.position = .zero
+        bgNode.position = CGPoint(x: -250.0, y: -200)
         addChild(bgNode)
     }
     
@@ -84,15 +84,10 @@ extension MainMenu {
         play.name = "play"
         play.setScale(0.85)
         play.zPosition = 10.0
-        play.position = CGPoint(x: size.width/2.0, y: size.height/2.0 + play.frame.height + 50.0)
+        play.position = CGPoint(x: size.width/2.0, y: size.height/2.0 + play.frame.height - 160)
         addChild(play)
         
-        let highscore = SKSpriteNode(imageNamed: "highscore")
-        highscore.name = "highscore"
-        highscore.setScale(0.85)
-        highscore.zPosition = 10.0
-        highscore.position = CGPoint(x: size.width/2.0, y: size.height/2.0)
-        addChild(highscore)
+
         
         let setting = SKSpriteNode(imageNamed: "setting")
         setting.name = "setting"
