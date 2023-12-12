@@ -12,6 +12,11 @@ class GameScene: SKScene {
     
     //MARK: - Properties
     
+    
+    //Properties TIMER
+    var elapsedTime: TimeInterval = 0
+    var timerLabel: SKLabelNode!
+    
     var ground: SKSpriteNode!
     var player: SKSpriteNode!
     var cameraNode = SKCameraNode()
@@ -65,6 +70,7 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         setupNodes()
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -124,6 +130,7 @@ extension GameScene {
         createBG()
         createGround()
         createPlayer()
+        setupTimer()
         setupSpike()
         setupSuriken()
         spawnObstacles()
@@ -201,6 +208,8 @@ extension GameScene {
     func movePlayer() {
         let amountToMove = cameraMovePointPerSecond * CGFloat(dt)
         player.position.x += amountToMove
+        
+        timerLabel.position.x += amountToMove
     }
     
     func setupSuriken() {
@@ -266,6 +275,41 @@ extension GameScene {
                 }
             }
         ])))
+    }
+    
+    //FUNZIONI TIMER
+    func startTimer() {
+        // Esegui un'azione che incrementa il tempo ogni secondo
+        let waitAction = SKAction.wait(forDuration: 1)
+        let updateAction = SKAction.run { [weak self] in
+            self?.elapsedTime += 1
+            self?.updateTimerLabel()
+        }
+        let sequenceAction = SKAction.sequence([waitAction, updateAction])
+        let repeatAction = SKAction.repeatForever(sequenceAction)
+        run(repeatAction)
+    }
+    
+    func updateTimerLabel() {
+        let minutes = Int(elapsedTime) / 60
+        let seconds = Int(elapsedTime) % 60
+        timerLabel.text = String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    func createTimerLabel() {
+        timerLabel = SKLabelNode(text: "00:00")
+        timerLabel.name = "TimerLabel"
+        timerLabel.zPosition = 5.0
+        timerLabel.fontSize = 100
+        timerLabel.fontName = "mushescape"
+        timerLabel.position = CGPoint(x: 1000, y: 1100)
+        addChild(timerLabel)
+    }
+    
+    
+    func setupTimer() {
+        createTimerLabel()
+        startTimer()
     }
     
 }
