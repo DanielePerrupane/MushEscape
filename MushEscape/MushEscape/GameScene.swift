@@ -16,6 +16,7 @@ class GameScene: SKScene {
     //Properties TIMER
     var elapsedTime: TimeInterval = 0
     var timerLabel: SKLabelNode!
+    var isTimerPaused = false
     
     var ground: SKSpriteNode!
     var player: SKSpriteNode!
@@ -30,7 +31,7 @@ class GameScene: SKScene {
     var LongWoodAn = SKTexture(imageNamed: "long_wood_spike_01")
     var DogAn = SKTexture(imageNamed: "dog1")
     var BirdAn = SKTexture(imageNamed: "bird1")
-
+    
     
     let textures = Textures()
     
@@ -290,7 +291,7 @@ extension GameScene {
             .removeFromParent()
         ]))
     }
-
+    
     func spawnDog() {
         let random = Double(CGFloat.random(min: 3.0, max: isTimeD))
         run(.repeatForever(.sequence([
@@ -306,9 +307,9 @@ extension GameScene {
     func setupSpike() {
         
         let spike = SKSpriteNode(imageNamed: "long_wood_spike_05")
-//        let spikeAn = SKAction.animate(with: textures.LongWood, timePerFrame: 0.2)
-//        let AnSpike = SKAction.repeatForever(spikeAn)
-//        spike.run(AnSpike)
+        //        let spikeAn = SKAction.animate(with: textures.LongWood, timePerFrame: 0.2)
+        //        let AnSpike = SKAction.repeatForever(spikeAn)
+        //        spike.run(AnSpike)
         spike.scale(to: spikeS)
         spike.name = "Spike"
         obstaclesSpike.append(spike)
@@ -353,13 +354,30 @@ extension GameScene {
         // Esegui un'azione che incrementa il tempo ogni secondo
         let waitAction = SKAction.wait(forDuration: 1)
         let updateAction = SKAction.run { [weak self] in
-            self?.elapsedTime += 1
-            self?.updateTimerLabel()
+            guard let self = self, !self.isTimerPaused else { return }
+            self.elapsedTime += 1
+            self.updateTimerLabel()
         }
         let sequenceAction = SKAction.sequence([waitAction, updateAction])
         let repeatAction = SKAction.repeatForever(sequenceAction)
-        run(repeatAction)
+        run(repeatAction, withKey: "timerAction")
     }
+    
+    //FUNZIONI DA IMPLEMENTARE SUCCESSIVAMENTE
+    
+//    func pauseTimer() {
+//        isTimerPaused = true
+//    }
+//    
+//    func resumeTimer() {
+//        isTimerPaused = false
+//    }
+//    
+//    func stopTimer() {
+//        removeAction(forKey: "timerAction")
+//        isTimerPaused = false
+//        // Ora puoi utilizzare la variabile `elapsedTime` come necessario
+//    }
     
     func updateTimerLabel() {
         let minutes = Int(elapsedTime) / 60
@@ -368,11 +386,13 @@ extension GameScene {
     }
     
     func createTimerLabel() {
-        timerLabel = SKLabelNode(text: "00:00")
+        timerLabel = SKLabelNode(fontNamed: "mushescape")
         timerLabel.name = "TimerLabel"
+        //FONT 
+        timerLabel.fontName = "Papyrus"
+        timerLabel.text = "00:00"
         timerLabel.zPosition = 5.0
         timerLabel.fontSize = 100
-        timerLabel.fontName = "mushescape"
         timerLabel.position = CGPoint(x: 1000, y: 1100)
         addChild(timerLabel)
     }
