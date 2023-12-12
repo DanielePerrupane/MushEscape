@@ -21,7 +21,6 @@
 		ED12978F2B23A0DE003C8A2E /* CGFloat+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED12978E2B23A0DE003C8A2E /* CGFloat+Ext.swift */; };
 		ED2A91E02B220FEF00F5FFC5 /* Textures.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */; };
 		ED2A91E22B22102900F5FFC5 /* CGPoint+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */; };
-		EDE2FF942B285BB10048A8C8 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE2FF932B285BB10048A8C8 /* Types.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,7 +39,6 @@
 		ED12978E2B23A0DE003C8A2E /* CGFloat+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Ext.swift"; sourceTree = "<group>"; };
 		ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Textures.swift; sourceTree = "<group>"; };
 		ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Ext.swift"; sourceTree = "<group>"; };
-		EDE2FF932B285BB10048A8C8 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,7 +93,6 @@
 				E7223EFC2B1F4004005BB0A9 /* Assets.xcassets */,
 				64421E012B232C6E0091906C /* Fonts */,
 				E7223EFE2B1F4004005BB0A9 /* LaunchScreen.storyboard */,
-				EDE2FF932B285BB10048A8C8 /* Types.swift */,
 			);
 			path = MushEscape;
 			sourceTree = "<group>";
@@ -180,7 +177,6 @@
 				ED2A91E22B22102900F5FFC5 /* CGPoint+Ext.swift in Sources */,
 				ED2A91E02B220FEF00F5FFC5 /* Textures.swift in Sources */,
 				E7223EF82B1F4004005BB0A9 /* GameViewController.swift in Sources */,
-				EDE2FF942B285BB10048A8C8 /* Types.swift in Sources */,
 				ED12978F2B23A0DE003C8A2E /* CGFloat+Ext.swift in Sources */,
 				E7223EF02B1F4004005BB0A9 /* AppDelegate.swift in Sources */,
 			);
