@@ -25,7 +25,7 @@ class GameScene: SKScene {
     var LongWoodAn = SKTexture(imageNamed: "long_wood_spike_01")
     var DogAn = SKTexture(imageNamed: "dog1")
     var BirdAn = SKTexture(imageNamed: "bird1")
-
+    var mushroomDead = SKTexture(imageNamed: "1_mushy")
     
     let textures = Textures()
     
@@ -46,6 +46,8 @@ class GameScene: SKScene {
     
     var numberOfJumps = 0
     let maxJumps = 2
+    
+    var gameOver = false
     
     var playableRect: CGRect {
         let ratio: CGFloat
@@ -80,6 +82,7 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         if !isPaused {
+        setupGameOver()
             if onGround || numberOfJumps < maxJumps {
                 if onGround {
                     // Se il giocatore è a terra, consenti un salto
@@ -140,9 +143,14 @@ extension GameScene {
         spawnObstacles()
         spawnBird()
         spawnDog()
+        setupPhysics()
         setupCamera()
         
         
+    }
+    
+    func setupPhysics() {
+        physicsWorld.contactDelegate = self
     }
     
     func createBG() {
@@ -164,6 +172,10 @@ extension GameScene {
             ground.anchorPoint = .zero
             ground.zPosition = 1
             ground.position = CGPoint(x: CGFloat(i)*ground.frame.width, y: 80.0)
+            ground.physicsBody = SKPhysicsBody(rectangleOf: ground.size)
+            ground.physicsBody!.isDynamic = false
+            ground.physicsBody!.affectedByGravity = false
+            ground.physicsBody!.categoryBitMask = PhysicsCategory.Ground
             addChild(ground)
         }
     }
@@ -176,6 +188,11 @@ extension GameScene {
         player.name = "Player"
         player.zPosition = 5.0
         player.scale(to: playerS)
+        player.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 140, height: 115))
+        player.physicsBody!.affectedByGravity = false
+        player.physicsBody!.restitution = 0.0
+        player.physicsBody!.categoryBitMask = PhysicsCategory.Player
+        player.physicsBody!.contactTestBitMask = PhysicsCategory.Obstacles
         player.position = CGPoint(x: 190, y: ground.frame.height + player.frame.height - 35)
         
         playerPosY = player.position.y
@@ -237,6 +254,11 @@ extension GameScene {
         let destinationPoint = CGPoint(x: -1000,y: randomY)
         let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
         BirdR.run(moveAction)
+        BirdR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 150, height: 100))
+        BirdR.physicsBody!.affectedByGravity = false
+        BirdR.physicsBody!.isDynamic = false
+        BirdR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
+        BirdR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
         addChild(BirdR)
         BirdR.run(.sequence([
             .wait(forDuration: 5),
@@ -275,6 +297,11 @@ extension GameScene {
         let destinationPoint = CGPoint(x: -1000,y: ground.frame.height + DogR.frame.height - 50)
         let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
         DogR.run(moveAction)
+        DogR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 200, height: 20))
+        DogR.physicsBody!.affectedByGravity = false
+        DogR.physicsBody!.isDynamic = false
+        DogR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
+        DogR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
         addChild(DogR)
         DogR.run(.sequence([
             .wait(forDuration: 5),
@@ -309,12 +336,30 @@ extension GameScene {
         spikeR.zPosition = 5.0
         spikeR.position = CGPoint(x: cameraRect.maxX + CGFloat.random(in: 0...size.width), y: ground.frame.height + spikeR.frame.height - 300)
         addChild(spikeR)
+        spikeR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 115))
+        spikeR.physicsBody!.affectedByGravity = false
+        spikeR.physicsBody!.isDynamic = false
+        spikeR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
+        spikeR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
         spikeR.run(.sequence([
             .wait(forDuration: 10),
             .removeFromParent()
         ]))
     }
     
+    func setupGameOver() {
+//        player.removeAllActions()
+        
+//        player = SKSpriteNode(texture: mushroomDead)
+        let RunAnimation = SKAction.animate(with: textures.mushroomDead, timePerFrame: 0.1)
+        player.run(RunAnimation)
+        
+//        player.name = "Player"
+//        player.zPosition = 10.0
+//        player.scale(to: playerS)
+//        player.position = CGPoint(x: 190, y: ground.frame.height + player.frame.height - 35)
+//        addChild(player)
+    }
     
     func spawnObstacles() {
         let random = Double(CGFloat.random(min: 1.5, max: isTime))
@@ -339,4 +384,22 @@ extension GameScene {
         
     }
     
+}
+
+//MARK: -SKPhysicsContactDelegate
+
+extension GameScene: SKPhysicsContactDelegate {
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        let other = contact.bodyA.categoryBitMask == PhysicsCategory.Player ? contact.bodyB : contact.bodyA
+        
+        switch other.categoryBitMask {
+        case PhysicsCategory.Obstacles:
+            cameraMovePointPerSecond = 0
+            setupGameOver()
+            
+        default:
+            break
+        }
+    }
 }
