@@ -15,31 +15,26 @@ class Textures {
                                              SKTexture(imageNamed: "walk4"),
     ]
     
-    let Spike : [SKTexture] = [SKTexture(imageNamed: "Spike_B-1"),
-                               SKTexture(imageNamed: "Spike_B-2"),
-                               SKTexture(imageNamed: "Spike_B-3"),
-                               SKTexture(imageNamed: "Spike_B-4"),
-                               SKTexture(imageNamed: "Spike_B-5"),
-                               SKTexture(imageNamed: "Spike_B-6"),
-                               SKTexture(imageNamed: "Spike_B-7"),
-                               SKTexture(imageNamed: "Spike_B-8"),
+    let LongWood : [SKTexture] = [SKTexture(imageNamed: "long_wood_spike_01"),
+                               SKTexture(imageNamed: "long_wood_spike_02"),
+                               SKTexture(imageNamed: "long_wood_spike_03"),
+                               SKTexture(imageNamed: "long_wood_spike_04"),
+                                SKTexture(imageNamed: "long_wood_spike_05"),
+    ]    
+    
+    let Dog : [SKTexture] = [SKTexture(imageNamed: "dog1"),
+                                SKTexture(imageNamed: "dog2"),
+                                SKTexture(imageNamed: "dog3"),
+                                SKTexture(imageNamed: "dog4"),
+                                SKTexture(imageNamed: "dog5"),
+                                SKTexture(imageNamed: "dog6"),
     ]
     
-    let Suriken : [SKTexture] = [SKTexture(imageNamed: "Suriken-1"),
-                               SKTexture(imageNamed: "Suriken-2"),
-                               SKTexture(imageNamed: "Suriken-3"),
-                               SKTexture(imageNamed: "Suriken-4"),
-                               SKTexture(imageNamed: "Suriken-5"),
-                               SKTexture(imageNamed: "Suriken-6"),
-                               SKTexture(imageNamed: "Suriken-7"),
-                               SKTexture(imageNamed: "Suriken-8"),
-    ]
-    
-    let MiniBear : [SKTexture] = [SKTexture(imageNamed: "MiniBear-1"),
-                               SKTexture(imageNamed: "MiniBear-2"),
-                               SKTexture(imageNamed: "MiniBear-3"),
-                               SKTexture(imageNamed: "MiniBear-4"),
-                               SKTexture(imageNamed: "MiniBear-5"),
-                               SKTexture(imageNamed: "MiniBear-6"),
+    let Bird : [SKTexture] = [SKTexture(imageNamed: "bird1"),
+                                SKTexture(imageNamed: "bird2"),
+                                SKTexture(imageNamed: "bird3"),
+                                SKTexture(imageNamed: "bird4"),
+                                SKTexture(imageNamed: "bird5"),
+                                SKTexture(imageNamed: "bird6"),
     ]
 }
