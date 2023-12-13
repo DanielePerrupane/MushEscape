@@ -104,7 +104,7 @@ class GameScene: SKScene {
                     // Se il giocatore è in aria e ha già effettuato il primo salto, consenti il doppio salto solo se è atterrato
                     numberOfJumps += 1
                 }
-                velocityY = -25
+                velocityY = -22
                 onGround = false
                 run(soundJump)
             }
@@ -113,8 +113,8 @@ class GameScene: SKScene {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        if velocityY < -12.5 {
-            velocityY = -12.5
+        if velocityY < -10.5 {
+            velocityY = -10.5
         }
     }
     
@@ -245,7 +245,6 @@ extension GameScene {
     func movePlayer() {
         let amountToMove = cameraMovePointPerSecond * CGFloat(dt)
         player.position.x += amountToMove
-        
         timerLabel.position.x += amountToMove
         timerLabel1.position.x += amountToMove
     }
@@ -296,7 +295,7 @@ extension GameScene {
         let index = Int(arc4random_uniform(UInt32(obstaclesBird.count)))
         let BirdR = obstaclesBird[index].copy() as! SKSpriteNode
         BirdR.zPosition = 10.0
-        let randomY = CGFloat.random(in: 900...1350)
+        let randomY = CGFloat.random(in: 800...1150)
         BirdR.position = CGPoint(x: cameraRect.maxX + 2060, y: randomY)
         let baseDuration: TimeInterval = 10.0
         let randomFactor: TimeInterval = TimeInterval.random(in: 9.0...11.0)
@@ -304,14 +303,14 @@ extension GameScene {
         let destinationPoint = CGPoint(x: -1000,y: randomY)
         let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
         BirdR.run(moveAction)
-        BirdR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 150, height: 100))
+        BirdR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 120, height: 70))
         BirdR.physicsBody!.affectedByGravity = false
         BirdR.physicsBody!.isDynamic = false
         BirdR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
         BirdR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
         addChild(BirdR)
         BirdR.run(.sequence([
-            .wait(forDuration: 5),
+            .wait(forDuration: 10),
             .removeFromParent()
         ]))
     }
@@ -354,7 +353,7 @@ extension GameScene {
         DogR.run(moveAction)
         addChild(DogR)
         DogR.run(.sequence([
-            .wait(forDuration: 5),
+            .wait(forDuration: 10),
             .removeFromParent()
         ]))
     }
@@ -384,8 +383,9 @@ extension GameScene {
         let index = Int(arc4random_uniform(UInt32(obstaclesSpike.count-1)))
         let spikeR = obstaclesSpike[index].copy() as! SKSpriteNode
         spikeR.zPosition = 5.0
-        spikeR.position = CGPoint(x: cameraRect.maxX + CGFloat.random(in: 0...size.width), y: ground.frame.height + spikeR.frame.height - 300)
-        spikeR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 115))
+        let randomY = CGFloat.random(in: -300 ... -200)
+        spikeR.position = CGPoint(x: cameraRect.maxX + CGFloat.random(in: 0...size.width), y: ground.frame.height + spikeR.frame.height + randomY)
+        spikeR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 235))
         spikeR.physicsBody!.affectedByGravity = false
         spikeR.physicsBody!.isDynamic = false
         spikeR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
