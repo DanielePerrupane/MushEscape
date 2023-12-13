@@ -12,6 +12,10 @@ class GameScene: SKScene {
     
     //MARK: - Properties
     
+    //GAME OVER
+    var gameOverPopup: GameOverPopUp!
+    
+    
     var ground: SKSpriteNode!
     var player: SKSpriteNode!
     var cameraNode = SKCameraNode()
@@ -89,6 +93,11 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         setupNodes()
+        
+        // Aggiungi la creazione del tuo popup
+            gameOverPopup = GameOverPopUp()
+            addChild(gameOverPopup)
+
         
         SKTAudio.shared.playBGMusic("backgroundmusic.mp3")
     }
@@ -476,8 +485,10 @@ extension GameScene {
     
     func setupGameOver() {
         player.removeAllActions()
+        let highScore = elapsedTime // Recupera il tuo record più alto
+        let lastScore = elapsedTime // O il tempo dell'ultima partita
         
-        //        player = SKSpriteNode(texture: mushroomDead)
+        //player = SKSpriteNode(texture: mushroomDead)
         let RunAnimation = SKAction.animate(with: textures.mushroomDead, timePerFrame: 0.3)
         player.run(RunAnimation)
         
