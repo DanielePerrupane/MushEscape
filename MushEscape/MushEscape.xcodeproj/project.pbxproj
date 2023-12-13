@@ -20,6 +20,8 @@
 		E79F85022B271580003AC03A /* GameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79F85012B271580003AC03A /* GameManager.swift */; };
 		ED12978F2B23A0DE003C8A2E /* CGFloat+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED12978E2B23A0DE003C8A2E /* CGFloat+Ext.swift */; };
 		ED15DD6E2B28A17F0039BFF1 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED15DD6D2B28A17F0039BFF1 /* Types.swift */; };
+		ED234F522B29A24E007407D7 /* backgroundmusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = ED234F512B29A24E007407D7 /* backgroundmusic.mp3 */; };
+		ED234F542B29A255007407D7 /* jump.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = ED234F532B29A255007407D7 /* jump.mp3 */; };
 		ED2A91E02B220FEF00F5FFC5 /* Textures.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */; };
 		ED2A91E22B22102900F5FFC5 /* CGPoint+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */; };
 		EDCE085F2B29070D005D3B59 /* SKTAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCE085E2B29070D005D3B59 /* SKTAudio.swift */; };
@@ -41,6 +43,8 @@
 		E79F85012B271580003AC03A /* GameManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameManager.swift; sourceTree = "<group>"; };
 		ED12978E2B23A0DE003C8A2E /* CGFloat+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Ext.swift"; sourceTree = "<group>"; };
 		ED15DD6D2B28A17F0039BFF1 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		ED234F512B29A24E007407D7 /* backgroundmusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = backgroundmusic.mp3; sourceTree = "<group>"; };
+		ED234F532B29A255007407D7 /* jump.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = jump.mp3; sourceTree = "<group>"; };
 		ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Textures.swift; sourceTree = "<group>"; };
 		ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Ext.swift"; sourceTree = "<group>"; };
 		EDCE085E2B29070D005D3B59 /* SKTAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKTAudio.swift; sourceTree = "<group>"; };
@@ -102,6 +106,8 @@
 				E7223EFE2B1F4004005BB0A9 /* LaunchScreen.storyboard */,
 				EDCE085E2B29070D005D3B59 /* SKTAudio.swift */,
 				EDCE08602B290742005D3B59 /* SKAction+Ext.swift */,
+				ED234F512B29A24E007407D7 /* backgroundmusic.mp3 */,
+				ED234F532B29A255007407D7 /* jump.mp3 */,
 			);
 			path = MushEscape;
 			sourceTree = "<group>";
@@ -166,9 +172,11 @@
 			files = (
 				64421E002B232C5F0091906C /* mushescape.ttf in Resources */,
 				E7223EFB2B1F4004005BB0A9 /* Main.storyboard in Resources */,
+				ED234F542B29A255007407D7 /* jump.mp3 in Resources */,
 				E7223EF22B1F4004005BB0A9 /* GameScene.sks in Resources */,
 				E7223EFD2B1F4004005BB0A9 /* Assets.xcassets in Resources */,
 				E7223F002B1F4004005BB0A9 /* LaunchScreen.storyboard in Resources */,
+				ED234F522B29A24E007407D7 /* backgroundmusic.mp3 in Resources */,
 				E7223EF42B1F4004005BB0A9 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
