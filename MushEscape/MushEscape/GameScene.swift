@@ -12,6 +12,7 @@ class GameScene: SKScene {
     
     //MARK: - Properties
     
+    
     var ground: SKSpriteNode!
     var player: SKSpriteNode!
     var cameraNode = SKCameraNode()
@@ -26,7 +27,6 @@ class GameScene: SKScene {
     var DogAn = SKTexture(imageNamed: "dog1")
     var BirdAn = SKTexture(imageNamed: "bird1")
     var mushroomDead = SKTexture(imageNamed: "1_mushy")
-    
     
     let textures = Textures()
     
@@ -127,14 +127,17 @@ class GameScene: SKScene {
                     onGround = false
                     run(soundJump)
                 }
+                velocityY = -22
+                onGround = false
+                run(soundJump)
             }
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        if velocityY < -12.5 {
-            velocityY = -12.5
+        if velocityY < -10.5 {
+            velocityY = -10.5
         }
     }
     
@@ -264,7 +267,6 @@ extension GameScene {
     func movePlayer() {
         let amountToMove = cameraMovePointPerSecond * CGFloat(dt)
         player.position.x += amountToMove
-        
         timerLabel.position.x += amountToMove
         timerLabel1.position.x += amountToMove
     }
@@ -279,7 +281,6 @@ extension GameScene {
         
         cameraNode.addChild(pauseNode)
     }
-    
     
     func createPanel() {
         cameraNode.addChild(containerNode)
@@ -318,7 +319,7 @@ extension GameScene {
         let index = Int(arc4random_uniform(UInt32(obstaclesBird.count)))
         let BirdR = obstaclesBird[index].copy() as! SKSpriteNode
         BirdR.zPosition = 10.0
-        let randomY = CGFloat.random(in: 900...1350)
+        let randomY = CGFloat.random(in: 800...1150)
         BirdR.position = CGPoint(x: cameraRect.maxX + 2060, y: randomY)
         let baseDuration: TimeInterval = 10.0
         let randomFactor: TimeInterval = TimeInterval.random(in: 9.0...11.0)
@@ -326,14 +327,14 @@ extension GameScene {
         let destinationPoint = CGPoint(x: -1000,y: randomY)
         let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
         BirdR.run(moveAction)
-        BirdR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 150, height: 100))
+        BirdR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 120, height: 70))
         BirdR.physicsBody!.affectedByGravity = false
         BirdR.physicsBody!.isDynamic = false
         BirdR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
         BirdR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
         addChild(BirdR)
         BirdR.run(.sequence([
-            .wait(forDuration: 5),
+            .wait(forDuration: 10),
             .removeFromParent()
         ]))
     }
@@ -376,7 +377,7 @@ extension GameScene {
         DogR.run(moveAction)
         addChild(DogR)
         DogR.run(.sequence([
-            .wait(forDuration: 5),
+            .wait(forDuration: 10),
             .removeFromParent()
         ]))
     }
@@ -406,8 +407,9 @@ extension GameScene {
         let index = Int(arc4random_uniform(UInt32(obstaclesSpike.count-1)))
         let spikeR = obstaclesSpike[index].copy() as! SKSpriteNode
         spikeR.zPosition = 5.0
-        spikeR.position = CGPoint(x: cameraRect.maxX + CGFloat.random(in: 0...size.width), y: ground.frame.height + spikeR.frame.height - 300)
-        spikeR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 115))
+        let randomY = CGFloat.random(in: -300 ... -200)
+        spikeR.position = CGPoint(x: cameraRect.maxX + CGFloat.random(in: 0...size.width), y: ground.frame.height + spikeR.frame.height + randomY)
+        spikeR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 235))
         spikeR.physicsBody!.affectedByGravity = false
         spikeR.physicsBody!.isDynamic = false
         spikeR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
@@ -466,18 +468,16 @@ extension GameScene {
     }
     
     func createTimerLabel() {
-        timerLabel = SKLabelNode(fontNamed: "mushescape")
+        timerLabel = SKLabelNode(fontNamed: "VCR OSD Mono")
         timerLabel.name = "TimerLabel"
-        timerLabel.fontName = "Papyrus"
         timerLabel.text = "00:00"
         timerLabel.zPosition = 5.0
         timerLabel.fontSize = 100
         timerLabel.position = CGPoint(x: 1000, y: 1100)
         addChild(timerLabel)
         
-        timerLabel1 = SKLabelNode(fontNamed: "mushescape")
+        timerLabel1 = SKLabelNode(fontNamed: "VCR OSD Mono")
         timerLabel1.name = "TimerLabel"
-        timerLabel1.fontName = "Papyrus"
         timerLabel1.text = "00:00"
         timerLabel1.zPosition = 4.0
         timerLabel1.fontSize = 105
@@ -497,17 +497,13 @@ extension GameScene {
     //MARK: - Game Over Function
     
     func setupGameOver() {
-        player.removeAllActions()
+
+//        let highScore = elapsedTime // Recupera il tuo record più alto
+//        let lastScore = elapsedTime // O il tempo dell'ultima partita
         
-        //        player = SKSpriteNode(texture: mushroomDead)
+        player.removeAllActions()
         let RunAnimation = SKAction.animate(with: textures.mushroomDead, timePerFrame: 0.3)
         player.run(RunAnimation)
-        
-        //        player.name = "Player"
-        //        player.zPosition = 10.0
-        //        player.scale(to: playerS)
-        //        player.position = CGPoint(x: 190, y: ground.frame.height + player.frame.height - 35)
-        //        addChild(player)
     }
     
     
@@ -525,6 +521,26 @@ extension GameScene: SKPhysicsContactDelegate {
             isTimerPaused = true
             cameraMovePointPerSecond = 0
             setupGameOver()
+            
+            let storedHighScore = UserDefaults.standard.integer(forKey: "HighestScore")
+                
+            if elapsedTime > TimeInterval(storedHighScore) {
+                UserDefaults.standard.set(elapsedTime, forKey: "HighestScore")
+            }
+
+            
+            let delay = SKAction.wait(forDuration: 2)
+            let action = SKAction.run {
+                let scene = GameOverPopUp(size: self.size)
+                scene.elapsedTime = self.elapsedTime
+                scene.scaleMode = self.scaleMode
+                self.view!.presentScene(scene)
+            }
+            
+            let sequency = SKAction.sequence([delay, action])
+            
+            self.run(sequency)
+            
             
         default:
             break
