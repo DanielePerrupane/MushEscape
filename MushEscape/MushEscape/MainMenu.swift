@@ -13,12 +13,18 @@ class MainMenu: SKScene {
     //MARK: - Properties
     
     var containerNode: SKSpriteNode!
+    var highScoreLabel: SKLabelNode!
+    var lastScoreLabel: SKLabelNode!
+    
+    var elapsedTime: TimeInterval = 0
     
     //MARK: - Systems
     
     override func didMove(to view: SKView){
         setupBG()
         setupGrounds()
+        highScore()
+        lastScore()
         setupNodes()
     }
     
@@ -78,6 +84,50 @@ extension MainMenu {
         }
     }
     
+    func highScore() {
+        let storedHighScore = UserDefaults.standard.integer(forKey: "HighestScore")
+        let minutes = Int(storedHighScore) / 60
+        let seconds = Int(storedHighScore) % 60
+        highScoreLabel = SKLabelNode(fontNamed: "VCR OSD Mono")
+        highScoreLabel.text = String(format: "Your highest score: %02d:%02d", minutes, seconds)
+        highScoreLabel.fontSize = 65
+        highScoreLabel.fontColor = SKColor.white
+        highScoreLabel.position = CGPoint(x: 1000, y: 930)
+        highScoreLabel.zPosition = 20
+        addChild(highScoreLabel)
+        
+        let storedHighScore1 = UserDefaults.standard.integer(forKey: "HighestScore")
+        highScoreLabel = SKLabelNode(fontNamed: "VCR OSD Mono")
+        highScoreLabel.text = String(format: "Your highest score: %02d:%02d", minutes, seconds)
+        highScoreLabel.fontSize = 65
+        highScoreLabel.fontColor = SKColor.black
+        highScoreLabel.position = CGPoint(x: 997, y: 929)
+        highScoreLabel.zPosition = 19
+        addChild(highScoreLabel)
+    }
+    
+    func lastScore() {
+        let minutes = Int(elapsedTime) / 60
+        let seconds = Int(elapsedTime) % 60
+        lastScoreLabel = SKLabelNode(fontNamed: "VCR OSD Mono")
+//        lastScoreLabel.text = "Your latest score:\(elapsedTime)"
+        lastScoreLabel.text = String(format: "Your latest score: %02d:%02d", minutes, seconds)
+        lastScoreLabel.fontSize = 50
+        lastScoreLabel.fontColor = SKColor.white
+        lastScoreLabel.position = CGPoint(x: 1000, y: 840)
+        lastScoreLabel.zPosition = 20
+        addChild(lastScoreLabel)
+        
+        lastScoreLabel = SKLabelNode(fontNamed: "VCR OSD Mono")
+//        lastScoreLabel.text = "Your latest score:\(elapsedTime)"
+        lastScoreLabel.text = String(format: "Your latest score: %02d:%02d", minutes, seconds)
+        lastScoreLabel.fontSize = 50
+        lastScoreLabel.fontColor = SKColor.black
+        lastScoreLabel.position = CGPoint(x: 997, y: 839)
+        lastScoreLabel.zPosition = 19
+        addChild(lastScoreLabel)
+    }
+    
     func moveGrounds() {
         enumerateChildNodes(withName: "ground") { (node, _) in
             let node = node as! SKSpriteNode
@@ -94,7 +144,7 @@ extension MainMenu {
         play.name = "play"
         play.setScale(0.85)
         play.zPosition = 10.0
-        play.position = CGPoint(x: size.width/2.0, y: size.height/2.0 + play.frame.height - 160)
+        play.position = CGPoint(x: size.width/2.0, y: size.height/2.0 + play.frame.height - 230)
         addChild(play)
         
 
@@ -103,7 +153,7 @@ extension MainMenu {
         setting.name = "setting"
         setting.setScale(0.85)
         setting.zPosition = 10.0
-        setting.position = CGPoint(x: size.width/2.0, y: size.height/2.0 - setting.size.height - 50)
+        setting.position = CGPoint(x: size.width/2.0, y: size.height/2.0 - setting.size.height - 100)
         addChild(setting)
     }
     

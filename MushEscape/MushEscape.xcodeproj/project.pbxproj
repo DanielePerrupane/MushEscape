@@ -47,6 +47,7 @@
 		ED15DD6D2B28A17F0039BFF1 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		ED234F512B29A24E007407D7 /* backgroundmusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = backgroundmusic.mp3; sourceTree = "<group>"; };
 		ED234F532B29A255007407D7 /* jump.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = jump.mp3; sourceTree = "<group>"; };
+		ED234F552B29ECB3007407D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Textures.swift; sourceTree = "<group>"; };
 		ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Ext.swift"; sourceTree = "<group>"; };
 		EDCE085E2B29070D005D3B59 /* SKTAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKTAudio.swift; sourceTree = "<group>"; };
@@ -91,6 +92,7 @@
 		E7223EEE2B1F4004005BB0A9 /* MushEscape */ = {
 			isa = PBXGroup;
 			children = (
+				ED234F552B29ECB3007407D7 /* Info.plist */,
 				E7223EEF2B1F4004005BB0A9 /* AppDelegate.swift */,
 				E7223EF12B1F4004005BB0A9 /* GameScene.sks */,
 				E7223EF32B1F4004005BB0A9 /* Actions.sks */,
@@ -99,6 +101,7 @@
 				ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */,
 				ED15DD6D2B28A17F0039BFF1 /* Types.swift */,
 				E7223EF52B1F4004005BB0A9 /* GameScene.swift */,
+				E74ED4452B29BF9900B4C371 /* GameOverPopUp.swift */,
 				E7223EF72B1F4004005BB0A9 /* GameViewController.swift */,
 				64421DFB2B2312F60091906C /* MainMenu.swift */,
 				E79F85012B271580003AC03A /* GameManager.swift */,
@@ -110,7 +113,6 @@
 				EDCE08602B290742005D3B59 /* SKAction+Ext.swift */,
 				ED234F512B29A24E007407D7 /* backgroundmusic.mp3 */,
 				ED234F532B29A255007407D7 /* jump.mp3 */,
-				E74ED4452B29BF9900B4C371 /* GameOverPopUp.swift */,
 			);
 			path = MushEscape;
 			sourceTree = "<group>";
@@ -356,6 +358,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = LHM9LNP2C8;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MushEscape/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -385,6 +388,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = LHM9LNP2C8;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MushEscape/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

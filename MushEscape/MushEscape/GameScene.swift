@@ -12,9 +12,6 @@ class GameScene: SKScene {
     
     //MARK: - Properties
     
-    //GAME OVER
-    var gameOverPopup: GameOverPopUp!
-    
     
     var ground: SKSpriteNode!
     var player: SKSpriteNode!
@@ -30,7 +27,6 @@ class GameScene: SKScene {
     var DogAn = SKTexture(imageNamed: "dog1")
     var BirdAn = SKTexture(imageNamed: "bird1")
     var mushroomDead = SKTexture(imageNamed: "1_mushy")
-    
     
     let textures = Textures()
     
@@ -93,12 +89,6 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         setupNodes()
-        
-        // Aggiungi la creazione del tuo popup
-            gameOverPopup = GameOverPopUp()
-            addChild(gameOverPopup)
-
-        
         SKTAudio.shared.playBGMusic("backgroundmusic.mp3")
     }
     
@@ -453,18 +443,16 @@ extension GameScene {
     }
     
     func createTimerLabel() {
-        timerLabel = SKLabelNode(fontNamed: "mushescape")
+        timerLabel = SKLabelNode(fontNamed: "VCR OSD Mono")
         timerLabel.name = "TimerLabel"
-        timerLabel.fontName = "Papyrus"
         timerLabel.text = "00:00"
         timerLabel.zPosition = 5.0
         timerLabel.fontSize = 100
         timerLabel.position = CGPoint(x: 1000, y: 1100)
         addChild(timerLabel)
         
-        timerLabel1 = SKLabelNode(fontNamed: "mushescape")
+        timerLabel1 = SKLabelNode(fontNamed: "VCR OSD Mono")
         timerLabel1.name = "TimerLabel"
-        timerLabel1.fontName = "Papyrus"
         timerLabel1.text = "00:00"
         timerLabel1.zPosition = 4.0
         timerLabel1.fontSize = 105
@@ -484,19 +472,13 @@ extension GameScene {
     //MARK: - Game Over Function
     
     func setupGameOver() {
-        player.removeAllActions()
-        let highScore = elapsedTime // Recupera il tuo record più alto
-        let lastScore = elapsedTime // O il tempo dell'ultima partita
+
+//        let highScore = elapsedTime // Recupera il tuo record più alto
+//        let lastScore = elapsedTime // O il tempo dell'ultima partita
         
-        //player = SKSpriteNode(texture: mushroomDead)
+        player.removeAllActions()
         let RunAnimation = SKAction.animate(with: textures.mushroomDead, timePerFrame: 0.3)
         player.run(RunAnimation)
-        
-        //        player.name = "Player"
-        //        player.zPosition = 10.0
-        //        player.scale(to: playerS)
-        //        player.position = CGPoint(x: 190, y: ground.frame.height + player.frame.height - 35)
-        //        addChild(player)
     }
     
     
@@ -514,6 +496,26 @@ extension GameScene: SKPhysicsContactDelegate {
             isTimerPaused = true
             cameraMovePointPerSecond = 0
             setupGameOver()
+            
+            let storedHighScore = UserDefaults.standard.integer(forKey: "HighestScore")
+                
+            if elapsedTime > TimeInterval(storedHighScore) {
+                UserDefaults.standard.set(elapsedTime, forKey: "HighestScore")
+            }
+
+            
+            let delay = SKAction.wait(forDuration: 2)
+            let action = SKAction.run {
+                let scene = GameOverPopUp(size: self.size)
+                scene.elapsedTime = self.elapsedTime
+                scene.scaleMode = self.scaleMode
+                self.view!.presentScene(scene)
+            }
+            
+            let sequency = SKAction.sequence([delay, action])
+            
+            self.run(sequency)
+            
             
         default:
             break
