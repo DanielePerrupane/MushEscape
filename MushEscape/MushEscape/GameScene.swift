@@ -89,24 +89,44 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         setupNodes()
-        
         SKTAudio.shared.playBGMusic("backgroundmusic.mp3")
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        if !isPaused {
-            if onGround || numberOfJumps < maxJumps {
-                if onGround {
-                    // Se il giocatore è a terra, consenti un salto
-                    numberOfJumps += 1
-                } else if numberOfJumps == 1 {
-                    // Se il giocatore è in aria e ha già effettuato il primo salto, consenti il doppio salto solo se è atterrato
-                    numberOfJumps += 1
+        guard let touch = touches.first else { return }
+        let node = atPoint(touch.location(in: self))
+        
+        if node.name == "pause" {
+            if isPaused { return }
+            createPanel()
+            lastUpdateTime = 0.0
+            dt = 0.0
+            isPaused = true
+            
+        } else if node.name == "resume" {
+            containerNode.removeFromParent()
+            isPaused = false
+            
+        } else if node.name == "quit" {
+            let scene = MainMenu(size: size)
+            scene.scaleMode = scaleMode
+            view!.presentScene(scene) }
+        else {
+            
+            if !isPaused {
+                if onGround || numberOfJumps < maxJumps {
+                    if onGround {
+                        // Se il giocatore è a terra, consenti un salto
+                        numberOfJumps += 1
+                    } else if numberOfJumps == 1 {
+                        // Se il giocatore è in aria e ha già effettuato il primo salto, consenti il doppio salto solo se è atterrato
+                        numberOfJumps += 1
+                    }
+                    velocityY = -25
+                    onGround = false
+                    run(soundJump)
                 }
-                velocityY = -25
-                onGround = false
-                run(soundJump)
             }
         }
     }
@@ -162,9 +182,8 @@ extension GameScene {
         spawnBird()
         spawnDog()
         setupPhysics()
+        setupPause()
         setupCamera()
-        
-        
     }
     
     func setupPhysics() {
@@ -252,12 +271,15 @@ extension GameScene {
     
     func setupPause() {
         pauseNode = SKSpriteNode(imageNamed: "pausebutton")
-        pauseNode.setScale(0.5)
+        pauseNode.setScale(1.0) // Adjust the scale as needed
         pauseNode.zPosition = 50.0
         pauseNode.name = "pause"
-        pauseNode.position = CGPoint(x: playableRect.width/2.0 - pauseNode.frame.width/2.0 - 30.0, y: playableRect.height/2.0 - pauseNode.frame.height/2.0 - 10.0)
+        
+        pauseNode.position = CGPoint(x: cameraRect.minX + 1900, y: cameraRect.maxY - 200)
+        
         cameraNode.addChild(pauseNode)
     }
+    
     
     func createPanel() {
         cameraNode.addChild(containerNode)
