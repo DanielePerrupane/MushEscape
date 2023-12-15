@@ -96,7 +96,6 @@ extension MainMenu {
         highScoreLabel.zPosition = 20
         addChild(highScoreLabel)
         
-        let storedHighScore1 = UserDefaults.standard.integer(forKey: "HighestScore")
         highScoreLabel = SKLabelNode(fontNamed: "VCR OSD Mono")
         highScoreLabel.text = String(format: "Your highest score: %02d:%02d", minutes, seconds)
         highScoreLabel.fontSize = 65
@@ -142,16 +141,16 @@ extension MainMenu {
     func setupNodes() {
         let play = SKSpriteNode(imageNamed: "play")
         play.name = "play"
-        play.setScale(0.85)
+        play.setScale(1)
         play.zPosition = 10.0
-        play.position = CGPoint(x: size.width/2.0, y: size.height/2.0 + play.frame.height - 230)
+        play.position = CGPoint(x: size.width/2.0, y: size.height/2.0 + play.frame.height - 200)
         addChild(play)
         
 
         
-        let setting = SKSpriteNode(imageNamed: "setting")
+        let setting = SKSpriteNode(imageNamed: "settings")
         setting.name = "setting"
-        setting.setScale(0.85)
+        setting.setScale(1)
         setting.zPosition = 10.0
         setting.position = CGPoint(x: size.width/2.0, y: size.height/2.0 - setting.size.height - 100)
         addChild(setting)

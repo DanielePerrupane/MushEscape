@@ -25,6 +25,7 @@
 		ED234F542B29A255007407D7 /* jump.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = ED234F532B29A255007407D7 /* jump.mp3 */; };
 		ED2A91E02B220FEF00F5FFC5 /* Textures.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */; };
 		ED2A91E22B22102900F5FFC5 /* CGPoint+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */; };
+		EDA857982B2B889B002187FF /* gem.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EDA857972B2B889B002187FF /* gem.mp3 */; };
 		EDCE085F2B29070D005D3B59 /* SKTAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCE085E2B29070D005D3B59 /* SKTAudio.swift */; };
 		EDCE08612B290742005D3B59 /* SKAction+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCE08602B290742005D3B59 /* SKAction+Ext.swift */; };
 /* End PBXBuildFile section */
@@ -50,6 +51,7 @@
 		ED234F552B29ECB3007407D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		ED2A91DF2B220FEF00F5FFC5 /* Textures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Textures.swift; sourceTree = "<group>"; };
 		ED2A91E12B22102900F5FFC5 /* CGPoint+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Ext.swift"; sourceTree = "<group>"; };
+		EDA857972B2B889B002187FF /* gem.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = gem.mp3; sourceTree = "<group>"; };
 		EDCE085E2B29070D005D3B59 /* SKTAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKTAudio.swift; sourceTree = "<group>"; };
 		EDCE08602B290742005D3B59 /* SKAction+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKAction+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -113,6 +115,7 @@
 				EDCE08602B290742005D3B59 /* SKAction+Ext.swift */,
 				ED234F512B29A24E007407D7 /* backgroundmusic.mp3 */,
 				ED234F532B29A255007407D7 /* jump.mp3 */,
+				EDA857972B2B889B002187FF /* gem.mp3 */,
 			);
 			path = MushEscape;
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDA857982B2B889B002187FF /* gem.mp3 in Resources */,
 				64421E002B232C5F0091906C /* mushescape.ttf in Resources */,
 				E7223EFB2B1F4004005BB0A9 /* Main.storyboard in Resources */,
 				ED234F542B29A255007407D7 /* jump.mp3 in Resources */,

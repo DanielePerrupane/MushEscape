@@ -15,18 +15,28 @@ class GameScene: SKScene {
     
     var ground: SKSpriteNode!
     var player: SKSpriteNode!
+    var gems: SKSpriteNode!
+    var progressBar: SKSpriteNode!
+    var textProgress: SKLabelNode!
+    var textProgress1: SKLabelNode!
     var cameraNode = SKCameraNode()
     var obstaclesSpike : [SKSpriteNode] = []
     var obstaclesDog : [SKSpriteNode] = []
     var obstaclesBird : [SKSpriteNode] = []
+    var gemsSetup : [SKSpriteNode] = []
     var dog: SKSpriteNode!
     var bird: SKSpriteNode!
+    
+    var timeSinceLastSpeedIncrease: TimeInterval = 0.0
+    let speedIncreaseInterval: TimeInterval = 30.0 // Interval for increasing speed (30 seconds)
+    let speedIncreaseAmount: CGFloat = 50.0 // Amount by which the speed will increase
     
     var mushroomRun = SKTexture(imageNamed: "walk1")
     var LongWoodAn = SKTexture(imageNamed: "long_wood_spike_01")
     var DogAn = SKTexture(imageNamed: "dog1")
     var BirdAn = SKTexture(imageNamed: "bird1")
     var mushroomDead = SKTexture(imageNamed: "1_mushy")
+    var Gems = SKTexture(imageNamed: "gems_1")
     
     let textures = Textures()
     
@@ -53,14 +63,17 @@ class GameScene: SKScene {
     
     var numberOfJumps = 0
     let maxJumps = 2
+    var collectedGem = 0
+    let maxGems = 10
     
-//    var bgMusic = SKAction.playSoundFileNamed("backgroundmusic.mp3")
-
+    //    var bgMusic = SKAction.playSoundFileNamed("backgroundmusic.mp3")
+    
     var soundJump = SKAction.playSoundFileNamed("jump.mp3")
-      
+    var gemCollected = SKAction.playSoundFileNamed("gem")
+    
     var pauseNode: SKSpriteNode!
     var containerNode = SKNode()
-      
+    
     var playableRect: CGRect {
         let ratio: CGFloat
         switch UIScreen.main.nativeBounds.height {
@@ -119,9 +132,9 @@ class GameScene: SKScene {
                     if onGround {
                         // Se il giocatore è a terra, consenti un salto
                         numberOfJumps += 1
-                    } else if numberOfJumps == 1 {
+                    } else if numberOfJumps == maxJumps {
                         // Se il giocatore è in aria e ha già effettuato il primo salto, consenti il doppio salto solo se è atterrato
-                        numberOfJumps += 1
+                        numberOfJumps = 1
                     }
                     velocityY = -25
                     onGround = false
@@ -148,6 +161,12 @@ class GameScene: SKScene {
             dt = 0
         }
         
+        timeSinceLastSpeedIncrease += dt
+        if timeSinceLastSpeedIncrease >= speedIncreaseInterval {
+            cameraMovePointPerSecond += speedIncreaseAmount
+            timeSinceLastSpeedIncrease = 0.0 // Reset the timer
+        }
+        
         lastUpdateTime = currentTime
         cameraMove()
         movePlayer()
@@ -165,8 +184,8 @@ class GameScene: SKScene {
         }
     }
     func stopBackgroundMusic() {
-              SKTAudio.musicEnabled = false
-          }
+        SKTAudio.musicEnabled = false
+    }
 }
 
 //MARK: - Configuration
@@ -178,9 +197,12 @@ extension GameScene {
         createGround()
         createPlayer()
         setupTimer()
+        setupGems()
+        setupProgressBar()
         setupSpike()
         setupDog()
         setupBird()
+        spawnGems()
         spawnObstacles()
         spawnBird()
         spawnDog()
@@ -229,7 +251,7 @@ extension GameScene {
         player.physicsBody!.affectedByGravity = false
         player.physicsBody!.restitution = 0.0
         player.physicsBody!.categoryBitMask = PhysicsCategory.Player
-        player.physicsBody!.contactTestBitMask = PhysicsCategory.Obstacles
+        player.physicsBody!.contactTestBitMask = PhysicsCategory.Obstacles | PhysicsCategory.Gems
         
         playerPosY = player.position.y
         addChild(player)
@@ -269,6 +291,9 @@ extension GameScene {
         player.position.x += amountToMove
         timerLabel.position.x += amountToMove
         timerLabel1.position.x += amountToMove
+        progressBar.position.x += amountToMove
+        textProgress.position.x += amountToMove
+        textProgress1.position.x += amountToMove
     }
     
     func setupPause() {
@@ -285,23 +310,35 @@ extension GameScene {
     func createPanel() {
         cameraNode.addChild(containerNode)
         
-        let panel = SKSpriteNode(imageNamed: "panel")
+        let panel = SKSpriteNode(color: .black, size: CGSize(width: 2100, height: 1540))
         panel.zPosition = 60.0
         panel.position = .zero
+        panel.alpha = 0.5
         containerNode.addChild(panel)
+        
+        let pause = SKLabelNode(fontNamed: "VCR OSD Mono")
+        pause.zPosition = 70.0
+        pause.text = "PAUSE"
+        pause.name = "name"
+        pause.alpha = 100.0
+        pause.fontSize = 200
+        pause.position = CGPoint(x: 10.0, y:100.0)
+        panel.addChild(pause)
         
         let resume = SKSpriteNode(imageNamed: "resume")
         resume.zPosition = 70.0
         resume.name = "resume"
-        resume.setScale(0.7)
-        resume.position = CGPoint(x: -panel.frame.width/2.0 + resume.frame.width*1.5, y:0.0)
+        resume.setScale(1.7)
+        resume.alpha = 100.0
+        resume.position = CGPoint(x: -200, y: -150.0)
         panel.addChild(resume)
         
-        let quit = SKSpriteNode(imageNamed: "back")
+        let quit = SKSpriteNode(imageNamed: "home")
         quit.zPosition = 70.0
         quit.name = "quit"
-        quit.setScale(0.7)
-        quit.position = CGPoint(x: panel.frame.width/2.0 - quit.frame.width*1.5, y: 0.0)
+        quit.alpha = 100.0
+        quit.setScale(1.7)
+        quit.position = CGPoint(x: 200, y: -150.0)
         panel.addChild(quit)
     }
     
@@ -322,7 +359,7 @@ extension GameScene {
         let randomY = CGFloat.random(in: 800...1150)
         BirdR.position = CGPoint(x: cameraRect.maxX + 2060, y: randomY)
         let baseDuration: TimeInterval = 10.0
-        let randomFactor: TimeInterval = TimeInterval.random(in: 9.0...11.0)
+        let randomFactor: TimeInterval = TimeInterval.random(in: 10...15)
         let moveDuration = baseDuration + randomFactor
         let destinationPoint = CGPoint(x: -1000,y: randomY)
         let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
@@ -365,7 +402,7 @@ extension GameScene {
         DogR.zPosition = 10.0
         DogR.position = CGPoint(x: cameraRect.maxX + 2060, y: ground.frame.height + player.frame.height + 10)
         let baseDuration: TimeInterval = 10.0 // Base duration for movement
-        let randomFactor: TimeInterval = TimeInterval.random(in: 9.0...11.0) // Random factor
+        let randomFactor: TimeInterval = TimeInterval.random(in: 10.0...15.0) // Random factor
         let moveDuration = baseDuration + randomFactor
         let destinationPoint = CGPoint(x: -1000,y: ground.frame.height + DogR.frame.height - 50)
         let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
@@ -445,6 +482,77 @@ extension GameScene {
         
     }
     
+    func setupGems() {
+        gems = SKSpriteNode(texture: Gems)
+        let GemAn = SKAction.animate(with: textures.Gems, timePerFrame: 0.09)
+        let AnGem = SKAction.repeatForever(GemAn)
+        gems.run(AnGem)
+        gemsSetup.append(gems)
+        
+        let index = Int(arc4random_uniform(UInt32(gemsSetup.count-1)))
+        let gemsR = gemsSetup[index].copy() as! SKSpriteNode
+        gemsR.zPosition = 5.0
+        gemsR.setScale(5)
+        let randomY = CGFloat.random(in: 200 ... 600)
+        gemsR.position = CGPoint(x: cameraRect.maxX + CGFloat.random(in: 0...size.width), y: ground.frame.height + randomY)
+        gemsR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 90))
+        gemsR.physicsBody!.affectedByGravity = false
+        gemsR.physicsBody!.isDynamic = false
+        gemsR.physicsBody!.categoryBitMask = PhysicsCategory.Gems
+        gemsR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
+        addChild(gemsR)
+        gemsR.run(.sequence([
+            .wait(forDuration: 15),
+            .removeFromParent()
+        ]))
+    }
+    
+    func spawnGems() {
+        _ = Double(CGFloat.random(min: 1.0, max: isTimeD))
+        run(.repeatForever(.sequence([
+            .wait(forDuration: 2),
+            .run { [weak self] in
+                self?.setupGems()
+            }
+            
+        ])))
+        
+        run(.repeatForever(.sequence([
+            .wait(forDuration: 5),
+            .run {
+                self.isTime -= 0.01
+                
+                if self.isTime <= 1.5 {
+                    self.isTime = 1.5
+                }
+            }
+        ])))
+    }
+    
+    func setupProgressBar() {
+        textProgress = SKLabelNode(fontNamed: "VCR OSD Mono")
+        textProgress.zPosition = 4.0
+        textProgress.text = "Go to a new dimension"
+        textProgress.fontColor = .black
+        textProgress.position = CGPoint(x: 295, y: 1145)
+        textProgress.fontSize = 40
+        addChild(textProgress)
+        
+        textProgress1 = SKLabelNode(fontNamed: "VCR OSD Mono")
+        textProgress1.zPosition = 5.0
+        textProgress1.text = "Go to a new dimension"
+        textProgress1.fontColor = .white
+        textProgress1.position = CGPoint(x: 300, y: 1150)
+        textProgress1.fontSize = 40
+        addChild(textProgress1)
+        
+        progressBar = SKSpriteNode(imageNamed: "progress")
+        progressBar.zPosition = 5.0
+        progressBar.position = CGPoint(x: 300, y: 1100)
+        progressBar.setScale(2)
+        addChild(progressBar)
+    }
+    
     //MARK: - Timer Function
     
     func startTimer() {
@@ -494,16 +602,18 @@ extension GameScene {
         startTimer()
     }
     
+    func setupNewDimension() {
+        
+    }
+    
     //MARK: - Game Over Function
     
     func setupGameOver() {
-
-//        let highScore = elapsedTime // Recupera il tuo record più alto
-//        let lastScore = elapsedTime // O il tempo dell'ultima partita
         
         player.removeAllActions()
         let RunAnimation = SKAction.animate(with: textures.mushroomDead, timePerFrame: 0.3)
         player.run(RunAnimation)
+        
     }
     
     
@@ -523,11 +633,11 @@ extension GameScene: SKPhysicsContactDelegate {
             setupGameOver()
             
             let storedHighScore = UserDefaults.standard.integer(forKey: "HighestScore")
-                
+            
             if elapsedTime > TimeInterval(storedHighScore) {
                 UserDefaults.standard.set(elapsedTime, forKey: "HighestScore")
             }
-
+            
             
             let delay = SKAction.wait(forDuration: 2)
             let action = SKAction.run {
@@ -540,8 +650,21 @@ extension GameScene: SKPhysicsContactDelegate {
             let sequency = SKAction.sequence([delay, action])
             
             self.run(sequency)
-            
-            
+        case PhysicsCategory.Gems:
+            if let node = other.node {
+                print("gems")
+                collectedGem += 1
+                run(gemCollected)
+                node.removeFromParent()
+                
+                let progressBarTextures = ["progress", "progress1", "progress2", "progress3", "progress4", "progress5", "progress6", "progress7", "progress8", "progress9", "progress10"]
+                let index = min(collectedGem, progressBarTextures.count - 1)
+                progressBar.texture = SKTexture(imageNamed: progressBarTextures[index])
+                
+                if index == 10 {
+                    
+                }
+            }
         default:
             break
         }

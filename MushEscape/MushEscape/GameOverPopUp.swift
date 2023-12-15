@@ -76,17 +76,17 @@ class GameOverPopUp : SKScene {
         // imposta bottoni
         func createPanel() {
             
-            let resume = SKSpriteNode(imageNamed: "effectOn")
+            let resume = SKSpriteNode(imageNamed: "restart")
             resume.zPosition = 70.0
             resume.name = "resume"
-            resume.setScale(0.7)
+            resume.setScale(1.5)
             resume.position = CGPoint(x: 750, y: 500)
             addChild(resume)
             
-            let quit = SKSpriteNode(imageNamed: "effectOff")
+            let quit = SKSpriteNode(imageNamed: "home")
             quit.zPosition = 70.0
             quit.name = "quit"
-            quit.setScale(0.7)
+            quit.setScale(1.5)
             quit.position = CGPoint(x: 1250, y: 500)
             addChild(quit)
         }

@@ -43,4 +43,10 @@ class Textures {
                                 SKTexture(imageNamed: "3_mushy"),
                                 SKTexture(imageNamed: "4_mushy"),
     ]
+    
+    let Gems : [SKTexture] = [SKTexture(imageNamed: "gems_1"),
+                                SKTexture(imageNamed: "gems_2"),
+                                SKTexture(imageNamed: "gems_3"),
+                                SKTexture(imageNamed: "gems_4"),
+    ]
 }
