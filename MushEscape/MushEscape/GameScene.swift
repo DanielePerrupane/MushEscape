@@ -26,6 +26,7 @@ class GameScene: SKScene {
     var gemsSetup : [SKSpriteNode] = []
     var dog: SKSpriteNode!
     var bird: SKSpriteNode!
+    var bg: SKSpriteNode!
     
     var timeSinceLastSpeedIncrease: TimeInterval = 0.0
     let speedIncreaseInterval: TimeInterval = 30.0 // Interval for increasing speed (30 seconds)
@@ -37,6 +38,8 @@ class GameScene: SKScene {
     var BirdAn = SKTexture(imageNamed: "bird1")
     var mushroomDead = SKTexture(imageNamed: "1_mushy")
     var Gems = SKTexture(imageNamed: "gems_1")
+    var mushroomRainbow = SKTexture(imageNamed: "walk1")
+    var BgDistorted = SKTexture(imageNamed: "distortedbg1")
     
     let textures = Textures()
     
@@ -217,7 +220,7 @@ extension GameScene {
     
     func createBG() {
         for i in 0...2 {
-            let bg = SKSpriteNode(imageNamed: "background")
+            bg = SKSpriteNode(imageNamed: "background")
             bg.name = "BG"
             bg.anchorPoint = .zero
             bg.position = CGPoint(x: CGFloat(i)*bg.frame.width, y: 100.0)
@@ -603,6 +606,10 @@ extension GameScene {
     }
     
     func setupNewDimension() {
+        let rainbowAnimation = SKSpriteNode(texture: mushroomRainbow)
+        let RunAnimation = SKAction.animate(with: textures.mushroomRainbow, timePerFrame: 0.09)
+        let RunMush = SKAction.repeatForever(RunAnimation)
+        player.run(RunMush)
         
     }
     
@@ -615,8 +622,6 @@ extension GameScene {
         player.run(RunAnimation)
         
     }
-    
-    
 }
 
 //MARK: -SKPhysicsContactDelegate
@@ -652,7 +657,6 @@ extension GameScene: SKPhysicsContactDelegate {
             self.run(sequency)
         case PhysicsCategory.Gems:
             if let node = other.node {
-                print("gems")
                 collectedGem += 1
                 run(gemCollected)
                 node.removeFromParent()
@@ -662,7 +666,7 @@ extension GameScene: SKPhysicsContactDelegate {
                 progressBar.texture = SKTexture(imageNamed: progressBarTextures[index])
                 
                 if index == 10 {
-                    
+                    setupNewDimension()
                 }
             }
         default:
