@@ -16,17 +16,23 @@ class GameScene: SKScene {
     var ground: SKSpriteNode!
     var player: SKSpriteNode!
     var gems: SKSpriteNode!
+    var border: SKSpriteNode!
     var progressBar: SKSpriteNode!
     var textProgress: SKLabelNode!
     var textProgress1: SKLabelNode!
     var cameraNode = SKCameraNode()
-    var obstaclesSpike : [SKSpriteNode] = []
-    var obstaclesDog : [SKSpriteNode] = []
-    var obstaclesBird : [SKSpriteNode] = []
-    var gemsSetup : [SKSpriteNode] = []
     var dog: SKSpriteNode!
     var bird: SKSpriteNode!
+    var shark: SKSpriteNode!
+    var hyena: SKSpriteNode!
     var bg: SKSpriteNode!
+    var bgD: SKSpriteNode!
+    var bgDNodes = [SKSpriteNode]()
+    
+    var generateObstacles = true
+    var generateObstaclesD = false
+    var generateGems = true
+    
     
     var timeSinceLastSpeedIncrease: TimeInterval = 0.0
     let speedIncreaseInterval: TimeInterval = 30.0 // Interval for increasing speed (30 seconds)
@@ -40,6 +46,8 @@ class GameScene: SKScene {
     var Gems = SKTexture(imageNamed: "gems_1")
     var mushroomRainbow = SKTexture(imageNamed: "walk1")
     var BgDistorted = SKTexture(imageNamed: "distortedbg1")
+    var Hyena = SKTexture(imageNamed: "hyena1")
+    var Shark = SKTexture(imageNamed: "shark1")
     
     let textures = Textures()
     
@@ -199,6 +207,7 @@ extension GameScene {
         createBG()
         createGround()
         createPlayer()
+        setupBorder()
         setupTimer()
         setupGems()
         setupProgressBar()
@@ -241,6 +250,21 @@ extension GameScene {
         }
     }
     
+    func setupBorder() {
+        // Crea uno sprite con un rettangolo trasparente
+        border = SKSpriteNode(color: UIColor.red, size: CGSize(width: 2048, height: 500))
+        border.alpha = 0.0 // Imposta l'alpha a 0 per renderlo completamente trasparente
+        border.position = CGPoint(x: 1000, y: 1490)
+        border.zPosition = 10
+        border.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 2048, height: 500))
+        border.physicsBody!.affectedByGravity = false
+        border.physicsBody!.isDynamic = false
+        border.physicsBody!.restitution = 0.0
+        border.physicsBody!.categoryBitMask = PhysicsCategory.Border
+        border.physicsBody!.contactTestBitMask = PhysicsCategory.Player
+        addChild(border)
+    }
+    
     func createPlayer() {
         player = SKSpriteNode(texture: mushroomRun)
         let RunAnimation = SKAction.animate(with: textures.mushroomRun, timePerFrame: 0.09)
@@ -279,6 +303,14 @@ extension GameScene {
             }
         }
         
+        enumerateChildNodes(withName: "bg") { (node, _) in
+            let node = node as! SKSpriteNode
+            
+            if node.position.x + node.frame.width < self.cameraRect.origin.x {
+                node.position = CGPoint(x: node.position.x + node.frame.width*2  , y: node.position.y)
+            }
+        }
+        
         //ground
         enumerateChildNodes(withName: "Ground") { (node, _) in
             let node = node as! SKSpriteNode
@@ -293,6 +325,7 @@ extension GameScene {
         let amountToMove = cameraMovePointPerSecond * CGFloat(dt)
         player.position.x += amountToMove
         timerLabel.position.x += amountToMove
+        border.position.x += amountToMove
         timerLabel1.position.x += amountToMove
         progressBar.position.x += amountToMove
         textProgress.position.x += amountToMove
@@ -354,26 +387,21 @@ extension GameScene {
         bird.scale(to: BirdS)
         bird.zPosition = 5.0
         bird.name = "Bird"
-        obstaclesBird.append(bird)
-        
-        let index = Int(arc4random_uniform(UInt32(obstaclesBird.count)))
-        let BirdR = obstaclesBird[index].copy() as! SKSpriteNode
-        BirdR.zPosition = 10.0
         let randomY = CGFloat.random(in: 800...1150)
-        BirdR.position = CGPoint(x: cameraRect.maxX + 2060, y: randomY)
+        bird.position = CGPoint(x: cameraRect.maxX + 2060, y: randomY)
         let baseDuration: TimeInterval = 10.0
         let randomFactor: TimeInterval = TimeInterval.random(in: 10...15)
         let moveDuration = baseDuration + randomFactor
         let destinationPoint = CGPoint(x: -1000,y: randomY)
         let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
-        BirdR.run(moveAction)
-        BirdR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 120, height: 70))
-        BirdR.physicsBody!.affectedByGravity = false
-        BirdR.physicsBody!.isDynamic = false
-        BirdR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
-        BirdR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
-        addChild(BirdR)
-        BirdR.run(.sequence([
+        bird.run(moveAction)
+        bird.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 120, height: 70))
+        bird.physicsBody!.affectedByGravity = false
+        bird.physicsBody!.isDynamic = false
+        bird.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
+        bird.physicsBody!.contactTestBitMask = PhysicsCategory.Player
+        addChild(bird)
+        bird.run(.sequence([
             .wait(forDuration: 10),
             .removeFromParent()
         ]))
@@ -384,7 +412,9 @@ extension GameScene {
         run(.repeatForever(.sequence([
             .wait(forDuration: random),
             .run { [weak self] in
-                self?.setupBird()
+                if self?.generateObstacles ?? false {
+                    self?.setupBird()
+                }
             }
             
         ])))
@@ -398,25 +428,20 @@ extension GameScene {
         dog.scale(to: dogS)
         dog.zPosition = 5.0
         dog.name = "Dog"
-        obstaclesDog.append(dog)
-        
-        let index = Int(arc4random_uniform(UInt32(obstaclesDog.count)))
-        let DogR = obstaclesDog[index].copy() as! SKSpriteNode
-        DogR.zPosition = 10.0
-        DogR.position = CGPoint(x: cameraRect.maxX + 2060, y: ground.frame.height + player.frame.height + 10)
+        dog.position = CGPoint(x: cameraRect.maxX + 2060, y: ground.frame.height + player.frame.height + 10)
         let baseDuration: TimeInterval = 10.0 // Base duration for movement
         let randomFactor: TimeInterval = TimeInterval.random(in: 10.0...15.0) // Random factor
         let moveDuration = baseDuration + randomFactor
-        let destinationPoint = CGPoint(x: -1000,y: ground.frame.height + DogR.frame.height - 50)
+        let destinationPoint = CGPoint(x: -1000,y: ground.frame.height + dog.frame.height - 50)
         let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
-        DogR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 200, height: 20))
-        DogR.physicsBody!.affectedByGravity = false
-        DogR.physicsBody!.isDynamic = false
-        DogR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
-        DogR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
-        DogR.run(moveAction)
-        addChild(DogR)
-        DogR.run(.sequence([
+        dog.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 200, height: 20))
+        dog.physicsBody!.affectedByGravity = false
+        dog.physicsBody!.isDynamic = false
+        dog.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
+        dog.physicsBody!.contactTestBitMask = PhysicsCategory.Player
+        dog.run(moveAction)
+        addChild(dog)
+        dog.run(.sequence([
             .wait(forDuration: 10),
             .removeFromParent()
         ]))
@@ -427,7 +452,9 @@ extension GameScene {
         run(.repeatForever(.sequence([
             .wait(forDuration: random),
             .run { [weak self] in
-                self?.setupDog()
+                if self?.generateObstacles ?? false {
+                    self?.setupDog()
+                }
             }
             
         ])))
@@ -442,20 +469,16 @@ extension GameScene {
         //        spike.run(AnSpike)
         spike.scale(to: spikeS)
         spike.name = "Spike"
-        obstaclesSpike.append(spike)
-        
-        let index = Int(arc4random_uniform(UInt32(obstaclesSpike.count-1)))
-        let spikeR = obstaclesSpike[index].copy() as! SKSpriteNode
-        spikeR.zPosition = 5.0
+        spike.zPosition = 5.0
         let randomY = CGFloat.random(in: -300 ... -200)
-        spikeR.position = CGPoint(x: cameraRect.maxX + CGFloat.random(in: 0...size.width), y: ground.frame.height + spikeR.frame.height + randomY)
-        spikeR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 235))
-        spikeR.physicsBody!.affectedByGravity = false
-        spikeR.physicsBody!.isDynamic = false
-        spikeR.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
-        spikeR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
-        addChild(spikeR)
-        spikeR.run(.sequence([
+        spike.position = CGPoint(x: cameraRect.maxX + CGFloat.random(in: 0...size.width), y: ground.frame.height + spike.frame.height + randomY)
+        spike.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 235))
+        spike.physicsBody!.affectedByGravity = false
+        spike.physicsBody!.isDynamic = false
+        spike.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
+        spike.physicsBody!.contactTestBitMask = PhysicsCategory.Player
+        addChild(spike)
+        spike.run(.sequence([
             .wait(forDuration: 10),
             .removeFromParent()
         ]))
@@ -490,21 +513,17 @@ extension GameScene {
         let GemAn = SKAction.animate(with: textures.Gems, timePerFrame: 0.09)
         let AnGem = SKAction.repeatForever(GemAn)
         gems.run(AnGem)
-        gemsSetup.append(gems)
-        
-        let index = Int(arc4random_uniform(UInt32(gemsSetup.count-1)))
-        let gemsR = gemsSetup[index].copy() as! SKSpriteNode
-        gemsR.zPosition = 5.0
-        gemsR.setScale(5)
+        gems.zPosition = 5.0
+        gems.setScale(5)
         let randomY = CGFloat.random(in: 200 ... 600)
-        gemsR.position = CGPoint(x: cameraRect.maxX + CGFloat.random(in: 0...size.width), y: ground.frame.height + randomY)
-        gemsR.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 90))
-        gemsR.physicsBody!.affectedByGravity = false
-        gemsR.physicsBody!.isDynamic = false
-        gemsR.physicsBody!.categoryBitMask = PhysicsCategory.Gems
-        gemsR.physicsBody!.contactTestBitMask = PhysicsCategory.Player
-        addChild(gemsR)
-        gemsR.run(.sequence([
+        gems.position = CGPoint(x: cameraRect.maxX + CGFloat.random(in: 0...size.width), y: ground.frame.height + randomY)
+        gems.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 90))
+        gems.physicsBody!.affectedByGravity = false
+        gems.physicsBody!.isDynamic = false
+        gems.physicsBody!.categoryBitMask = PhysicsCategory.Gems
+        gems.physicsBody!.contactTestBitMask = PhysicsCategory.Player
+        addChild(gems)
+        gems.run(.sequence([
             .wait(forDuration: 15),
             .removeFromParent()
         ]))
@@ -515,7 +534,9 @@ extension GameScene {
         run(.repeatForever(.sequence([
             .wait(forDuration: 2),
             .run { [weak self] in
-                self?.setupGems()
+                if self?.generateGems ?? false {
+                    self?.setupGems()
+                }
             }
             
         ])))
@@ -599,18 +620,131 @@ extension GameScene {
         
     }
     
-    
     func setupTimer() {
         createTimerLabel()
         startTimer()
     }
-    
+    //MARK: - New Dimension
     func setupNewDimension() {
-        let rainbowAnimation = SKSpriteNode(texture: mushroomRainbow)
-        let RunAnimation = SKAction.animate(with: textures.mushroomRainbow, timePerFrame: 0.09)
+        // Player setup
+        let runAnimation = SKAction.animate(with: textures.mushroomRainbow, timePerFrame: 0.09)
+        let runMush = SKAction.repeatForever(runAnimation)
+        player.run(runMush)
+        
+    }
+    
+    func normalDimension() {
+        let RunAnimation = SKAction.animate(with: textures.mushroomRun, timePerFrame: 0.09)
         let RunMush = SKAction.repeatForever(RunAnimation)
         player.run(RunMush)
+    }
+    
+    func setupShark() {
+        shark = SKSpriteNode(texture: Shark)
+        let BirdAn = SKAction.animate(with: textures.Shark, timePerFrame: 0.09)
+        let AnBird = SKAction.repeatForever(BirdAn)
+        shark.run(AnBird)
+        shark.scale(to: BirdS)
+        shark.zPosition = 5.0
+        shark.name = "Bird"
+        let randomY = CGFloat.random(in: 800...1150)
+        shark.position = CGPoint(x: cameraRect.maxX + 2060, y: randomY)
+        let baseDuration: TimeInterval = 10.0
+        let randomFactor: TimeInterval = TimeInterval.random(in: 10...15)
+        let moveDuration = baseDuration + randomFactor
+        let destinationPoint = CGPoint(x: -1000,y: randomY)
+        let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
+        shark.run(moveAction)
+        shark.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 120, height: 70))
+        shark.physicsBody!.affectedByGravity = false
+        shark.physicsBody!.isDynamic = false
+        shark.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
+        shark.physicsBody!.contactTestBitMask = PhysicsCategory.Player
+        addChild(shark)
+        shark.run(.sequence([
+            .wait(forDuration: 10),
+            .removeFromParent()
+        ]))
+    }
+    
+    func spawnShark() {
+        let random = Double(CGFloat.random(min: 3, max: isTimeD))
+        run(.repeatForever(.sequence([
+            .wait(forDuration: random),
+            .run { [weak self] in
+                if self?.generateObstaclesD ?? true {
+                    self?.setupShark()
+                }
+            }
+            
+        ])))
+    }
+    
+    func setupHyena() {
+        hyena = SKSpriteNode(texture: Hyena)
+        let DogAn = SKAction.animate(with: textures.Hyena, timePerFrame: 0.09)
+        let AnDog = SKAction.repeatForever(DogAn)
+        hyena.run(AnDog)
+        hyena.scale(to: dogS)
+        hyena.zPosition = 5.0
+        hyena.name = "Dog"
+        hyena.position = CGPoint(x: cameraRect.maxX + 2060, y: ground.frame.height + player.frame.height + 10)
+        let baseDuration: TimeInterval = 10.0 // Base duration for movement
+        let randomFactor: TimeInterval = TimeInterval.random(in: 10.0...15.0) // Random factor
+        let moveDuration = baseDuration + randomFactor
+        let destinationPoint = CGPoint(x: -1000,y: ground.frame.height + hyena.frame.height - 50)
+        let moveAction = SKAction.move(to: destinationPoint, duration: moveDuration)
+        hyena.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 200, height: 20))
+        hyena.physicsBody!.affectedByGravity = false
+        hyena.physicsBody!.isDynamic = false
+        hyena.physicsBody!.categoryBitMask = PhysicsCategory.Obstacles
+        hyena.physicsBody!.contactTestBitMask = PhysicsCategory.Player
+        hyena.run(moveAction)
+        addChild(hyena)
+        hyena.run(.sequence([
+            .wait(forDuration: 10),
+            .removeFromParent()
+        ]))
         
+    }
+    
+    func spawnHyena() {
+        let random = Double(CGFloat.random(min: 3, max: isTimeD))
+        run(.repeatForever(.sequence([
+            .wait(forDuration: random),
+            .run { [weak self] in
+                if self?.generateObstaclesD ?? true {
+                    self?.setupHyena()
+                }
+            }
+            
+        ])))
+    }
+    
+    func createBGD() {
+        for i in 0...2 {
+            bgD = SKSpriteNode(texture: BgDistorted)
+            let animation = SKAction.animate(with: textures.BgDistorted, timePerFrame: 0.3)
+            let An = SKAction.repeatForever(animation)
+            bgD.run(An)
+            bgD.name = "bg"
+            bgD.anchorPoint = .zero
+            bgD.position = CGPoint(x: CGFloat(i)*bgD.frame.width, y: 100.0)
+            bgD.zPosition = 1
+            addChild(bgD)
+            
+            bgDNodes.append(bgD)
+        }
+        
+        
+//        let waitAction = SKAction.wait(forDuration: 5)
+//        
+//        let removeBg = SKAction.run { [self] in
+//            bgD.removeFromParent()
+//        }
+//        
+//        let sequence = SKAction.sequence([waitAction, removeBg])
+//        bgD.run(sequence)
     }
     
     //MARK: - Game Over Function
@@ -620,6 +754,7 @@ extension GameScene {
         player.removeAllActions()
         let RunAnimation = SKAction.animate(with: textures.mushroomDead, timePerFrame: 0.3)
         player.run(RunAnimation)
+        
         
     }
 }
@@ -636,6 +771,18 @@ extension GameScene: SKPhysicsContactDelegate {
             isTimerPaused = true
             cameraMovePointPerSecond = 0
             setupGameOver()
+            dog.removeFromParent()
+            bird.removeFromParent()
+            
+            let gameOver = SKSpriteNode(imageNamed: "gameOver")
+            gameOver.position = CGPoint(x: cameraRect.minX + size.width/2, y: size.height/2)
+            gameOver.zPosition = 10
+            addChild(gameOver)
+            
+            let scaleUp = SKAction.scale(to: 1.1, duration: 0.5)
+            let scaleDown = SKAction.scale(to: 1.0, duration: 0.5)
+            let fullScale = SKAction.sequence([scaleUp, scaleDown])
+            gameOver.run(.repeatForever(fullScale))
             
             let storedHighScore = UserDefaults.standard.integer(forKey: "HighestScore")
             
@@ -665,10 +812,48 @@ extension GameScene: SKPhysicsContactDelegate {
                 let index = min(collectedGem, progressBarTextures.count - 1)
                 progressBar.texture = SKTexture(imageNamed: progressBarTextures[index])
                 
+                
                 if index == 10 {
-                    setupNewDimension()
+                    let waitAction = SKAction.wait(forDuration: 15)
+                    
+                    // Creazione di un'azione per eseguire il codice dopo il ritardo di 30 secondi
+                    let runAction = SKAction.run { [weak self] in
+                        self?.generateObstaclesD = true
+                        self?.generateObstacles = false
+                        self?.generateGems = false
+                        self?.dog.removeFromParent()
+                        self?.bird.removeFromParent()
+                        self?.gems.removeFromParent()
+                        self?.setupShark()
+                        self?.spawnShark()
+                        self?.setupHyena()
+                        self?.spawnHyena()
+                        self?.createBGD()
+                        self?.collectedGem = 0
+                        self?.progressBar.texture = SKTexture(imageNamed: "progress")
+                        self?.setupNewDimension()
+                    }
+                    
+                    let normalDimension = SKAction.run { [weak self] in
+                        self?.generateObstaclesD = false
+                        self?.generateObstacles = true
+                        self?.generateGems = true
+                        self?.shark.removeFromParent()
+                        self?.hyena.removeFromParent()
+                        for node in self?.bgDNodes ?? [] {
+                            node.removeFromParent()
+                        }
+                        self?.normalDimension()
+                    }
+                    // Creazione di una sequenza di azioni: attesa di 30 secondi e poi eseguire il codice
+                    let sequence = SKAction.sequence([runAction, waitAction, normalDimension])
+                    
+                    // Esegui la sequenza di azioni
+                    self.run(sequence)
                 }
             }
+        case PhysicsCategory.Border:
+            print("border")
         default:
             break
         }

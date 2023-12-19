@@ -34,10 +34,10 @@ class Textures {
     ]
     
     let BgDistorted : [SKTexture] = [SKTexture(imageNamed: "distortedbg1"),
-                                         SKTexture(imageNamed: "distortedbg2"),
-                                         SKTexture(imageNamed: "distortedbg3"),
-                                         SKTexture(imageNamed: "distortedbg4"),
-                                         SKTexture(imageNamed: "distortedbg5"),
+                                     SKTexture(imageNamed: "distortedbg2"),
+                                     SKTexture(imageNamed: "distortedbg3"),
+                                     SKTexture(imageNamed: "distortedbg4"),
+                                     SKTexture(imageNamed: "distortedbg5"),
     ]
     
     let LongWood : [SKTexture] = [SKTexture(imageNamed: "long_wood_spike_01"),
@@ -54,6 +54,41 @@ class Textures {
                              SKTexture(imageNamed: "dog5"),
                              SKTexture(imageNamed: "dog6"),
     ]
+    
+    let Hyena : [SKTexture] = [SKTexture(imageNamed: "hyena1"),
+                               SKTexture(imageNamed: "hyena2y"),
+                               SKTexture(imageNamed: "hyena3p"),
+                               SKTexture(imageNamed: "hyena4"),
+                               SKTexture(imageNamed: "hyena5p"),
+                               SKTexture(imageNamed: "hyena6y"),
+                               SKTexture(imageNamed: "hyena1p"),
+                               SKTexture(imageNamed: "hyena2y"),
+                               SKTexture(imageNamed: "hyena3"),
+                               SKTexture(imageNamed: "hyena4p"),
+                               SKTexture(imageNamed: "hyena5y"),
+                               SKTexture(imageNamed: "hyena6p"),
+                               SKTexture(imageNamed: "hyena1p"),
+                               SKTexture(imageNamed: "hyena2y"),
+                               SKTexture(imageNamed: "hyena3p"),
+                               SKTexture(imageNamed: "hyena4y"),
+                               SKTexture(imageNamed: "hyena5p"),
+                               SKTexture(imageNamed: "hyena6"),
+    ]
+    
+    let Shark : [SKTexture] = [SKTexture(imageNamed: "shark1"),
+                               SKTexture(imageNamed: "shark2p"),
+                               SKTexture(imageNamed: "shark3r"),
+                               SKTexture(imageNamed: "shark4p"),
+                               SKTexture(imageNamed: "shark1"),
+                               SKTexture(imageNamed: "shark2p"),
+                               SKTexture(imageNamed: "shark3r"),
+                               SKTexture(imageNamed: "shark4p"),
+                               SKTexture(imageNamed: "shark1r"),
+                               SKTexture(imageNamed: "shark2"),
+                               SKTexture(imageNamed: "shark3p"),
+                               SKTexture(imageNamed: "shark4r"),
+    ]
+    
     
     let Bird : [SKTexture] = [SKTexture(imageNamed: "bird1"),
                               SKTexture(imageNamed: "bird2"),
