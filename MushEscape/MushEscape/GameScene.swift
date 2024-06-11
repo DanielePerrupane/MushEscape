@@ -64,6 +64,7 @@ class GameScene: SKScene {
     var timerLabel: SKLabelNode!
     var timerLabel1: SKLabelNode!
     var isTimerPaused = false
+    var isAccelerated = false
     
     var isTime: CGFloat = 2.0
     var isTimeD: CGFloat = 5.0
@@ -584,8 +585,14 @@ extension GameScene {
         let waitAction = SKAction.wait(forDuration: 1)
         let updateAction = SKAction.run { [weak self] in
             guard let self = self, !self.isTimerPaused else { return }
-            self.elapsedTime += 1
-            self.updateTimerLabel()
+//            self.elapsedTime += 1
+//            self.updateTimerLabel()
+            if self.isAccelerated {
+                        self.elapsedTime += 5
+                    } else {
+                        self.elapsedTime += 1
+                    }
+                    self.updateTimerLabel()
         }
         let sequenceAction = SKAction.sequence([waitAction, updateAction])
         let repeatAction = SKAction.repeatForever(sequenceAction)
@@ -637,6 +644,9 @@ extension GameScene {
         let RunAnimation = SKAction.animate(with: textures.mushroomRun, timePerFrame: 0.09)
         let RunMush = SKAction.repeatForever(RunAnimation)
         player.run(RunMush)
+        
+        isAccelerated = false
+
     }
     
     func setupShark() {
@@ -735,16 +745,6 @@ extension GameScene {
             
             bgDNodes.append(bgD)
         }
-        
-        
-//        let waitAction = SKAction.wait(forDuration: 5)
-//        
-//        let removeBg = SKAction.run { [self] in
-//            bgD.removeFromParent()
-//        }
-//        
-//        let sequence = SKAction.sequence([waitAction, removeBg])
-//        bgD.run(sequence)
     }
     
     //MARK: - Game Over Function
@@ -813,7 +813,7 @@ extension GameScene: SKPhysicsContactDelegate {
                 progressBar.texture = SKTexture(imageNamed: progressBarTextures[index])
                 
                 
-                if index == 10 {
+                if index == 10  {
                     let waitAction = SKAction.wait(forDuration: 15)
                     
                     // Creazione di un'azione per eseguire il codice dopo il ritardo di 30 secondi
@@ -830,8 +830,12 @@ extension GameScene: SKPhysicsContactDelegate {
                         self?.spawnHyena()
                         self?.createBGD()
                         self?.collectedGem = 0
+                        self?.isAccelerated = true
                         self?.progressBar.texture = SKTexture(imageNamed: "progress")
                         self?.setupNewDimension()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 15) { [weak self] in
+                                self?.isAccelerated = false // Riporta il timer alla velocità normale
+                        }
                     }
                     
                     let normalDimension = SKAction.run { [weak self] in
